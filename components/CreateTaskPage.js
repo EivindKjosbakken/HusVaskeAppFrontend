@@ -39,7 +39,7 @@ const CreateTaskPage = () => {
         console.log('GOT ERROR ' + err);
       }
     };
-    fetchTasks('/api/todoitems');
+    fetchTasks('/api/todoitems/Eivind');
   }, []);
 
   const createTask = async (apiUrl, body) => {
@@ -48,7 +48,7 @@ const CreateTaskPage = () => {
     try {
       if (body.title != '' && body.location != '' && body.assignee != '') {
         const response = await api.post(apiUrl, body);
-        console.log('POST WORKED:' + response.data);
+        console.log(JSON.stringify(body) + ' POST WORKED:' + response.data);
       } else {
         console.log('BODY WAS EMPTY');
       }
@@ -99,7 +99,7 @@ const CreateTaskPage = () => {
                 <Button
                   onPress={() => {
                     createTask('/api/todoitem', {
-                      id: 1,
+                      id: 12,
                       title: taskName,
                       location: location,
                       assignee: assignee,
