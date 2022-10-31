@@ -2,13 +2,11 @@ import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {Button} from 'react-native-paper';
 import {DisplayBoard} from './components/DisplayBoard';
-import CreateTaskPage from './components/pages/CreateTaskPage';
-import ShowTasksPage from './components/pages/ShowTasksPage';
+
 import {Users} from './components/Users';
 import api from './components/api/posts';
-import LoginPage from './components/pages/LoginPage';
-import {NavigationContainer} from '@react-navigation/native';
 import type {Node} from 'react';
+
 import {
   SafeAreaView,
   ScrollView,
@@ -80,18 +78,6 @@ const App: () => Node = () => {
             <Text style={headerStyle}>Welcome to the TODO list app</Text>
           </View>
           <View></View>
-
-          {/*
-                <View>
-        <LoginPage></LoginPage>
-      </View>
-    <View className="col-md-8">
-      <CreateTaskPage></CreateTaskPage>
-    </View>
-    <View>
-      <ShowTasksPage />
-    </View>
-*/}
         </ScrollView>
       </SafeAreaView>
     </MainContainer>

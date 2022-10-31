@@ -6,12 +6,12 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {View, Text} from 'react-native';
 
 // Screens
-import HomeScreen from './screens/HomeScreen';
+import LoginScreen from './screens/LoginScreen';
 import ShowTasksScreen from './screens/ShowTasksScreen';
 import CreateTaskScreen from './screens/CreateTaskScreen';
 
 //Screen names
-const homeName = 'Home';
+const loginName = 'Login/Register';
 const ShowTasks = 'Your tasks';
 const CreateTask = 'Create task';
 
@@ -21,16 +21,16 @@ function MainContainer() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName={homeName}
+        initialRouteName={loginName}
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
             let rn = route.name;
 
-            if (rn === homeName) {
+            if (rn === loginName) {
               iconName = focused ? 'home-outline' : 'home-outline';
             } else if (rn === ShowTasks) {
-              iconName = focused ? 'document' : 'bookmark';
+              iconName = focused ? 'earth' : 'earth';
             } else if (rn === CreateTask) {
               iconName = focused ? 'add-circle' : 'add-circle-outline';
             }
@@ -39,7 +39,7 @@ function MainContainer() {
             return <Ionicons name={iconName} size={30} />;
           },
         })}>
-        <Tab.Screen name={homeName} component={HomeScreen} />
+        <Tab.Screen name={loginName} component={LoginScreen} />
         <Tab.Screen name={ShowTasks} component={ShowTasksScreen} />
         <Tab.Screen name={CreateTask} component={CreateTaskScreen} />
       </Tab.Navigator>

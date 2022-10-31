@@ -2,10 +2,10 @@ import React, {useEffect, useState} from 'react';
 import {View, Text, ScrollView, SafeAreaView} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import {create} from 'react-test-renderer';
-import api from '../api/posts';
+import api from '../../api/posts';
 import SInfo from 'react-native-sensitive-info';
 
-const LoginPage = () => {
+export default LoginScreen = () => {
   const [userName, setUsername] = useState('');
 
   const [loginUsername, setLoginUsername] = useState('');
@@ -170,5 +170,3 @@ const LoginPage = () => {
     </>
   );
 };
-
-export default LoginPage;
