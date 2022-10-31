@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
 import {Button} from 'react-native-paper';
-import {useAxiosGet} from './components/api/useAxiosGet';
-import {useAxiosPost} from './components/api/useAxiosPost';
 import {DisplayBoard} from './components/DisplayBoard';
-import CreateTaskPage from './components/CreateTaskPage';
+import CreateTaskPage from './components/pages/CreateTaskPage';
+import ShowTasksPage from './components/pages/ShowTasksPage';
 import {Users} from './components/Users';
 import api from './components/api/posts';
+import LoginPage from './components/pages/LoginPage';
 
 import type {Node} from 'react';
 import {
@@ -61,35 +61,6 @@ const App: () => Node = () => {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const {getRequest, data} = useAxiosGet();
-
-  const {postRequest} = useAxiosPost();
-
-  const fetchTasks = async apiUrl => {
-    try {
-      const response = await api.get(apiUrl);
-      //console.log('RESP:' + JSON.stringify(response.data));
-      //console.log(response.data);
-    } catch (err) {
-      console.log('GOT ERROR ' + err);
-    }
-  };
-
-  const sendPostRequest = async apiUrl => {
-    //kanskje du må ha klammer rundt apiUrl og body? ? ?
-    const body = {
-      id: 10,
-      title: 'Eivinds poste task',
-      location: 'Nederland',
-      assignee: 'Eivind',
-    };
-    try {
-      const response = await api.post('/api/todoitem', body);
-    } catch (err) {
-      console.log('ERROR WHEN POSTING A TASK: ' + err);
-    }
-  };
-
   const headerStyle = {
     fontWeight: 'bold',
     fontSize: 25,
@@ -106,35 +77,17 @@ const App: () => Node = () => {
         <View>
           <Text style={headerStyle}>Welcome to the TODO list app</Text>
         </View>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <View>
-            <Button
-              onPress={() => {
-                fetchTasks('/api/users');
-              }}
-              outlined>
-              FETCH
-            </Button>
-            <Button
-              onPress={() => {
-                sendPostRequest('/api/user', {
-                  id: 1,
-                  firstName: 'FUNKER BODY !? IIIIIIIIIIGJEN ',
-                  lastName: 'string',
-                  email: 'string',
-                });
-              }}
-              outlined>
-              POST
-            </Button>
-          </View>
+        <View>
+          <LoginPage></LoginPage>
         </View>
+        {/*
         <View className="col-md-8">
           <CreateTaskPage></CreateTaskPage>
         </View>
+        <View>
+          <ShowTasksPage />
+        </View>
+    */}
       </ScrollView>
     </SafeAreaView>
   );
