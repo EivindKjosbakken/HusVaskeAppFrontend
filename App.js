@@ -7,7 +7,7 @@ import ShowTasksPage from './components/pages/ShowTasksPage';
 import {Users} from './components/Users';
 import api from './components/api/posts';
 import LoginPage from './components/pages/LoginPage';
-
+import {NavigationContainer} from '@react-navigation/native';
 import type {Node} from 'react';
 import {
   SafeAreaView,
@@ -26,7 +26,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {Item} from 'react-native-paper/lib/typescript/components/List/List';
+
+import MainContainer from './components/navigation/MainContainer';
 
 const Section = ({children, title}): Node => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -69,27 +70,31 @@ const App: () => Node = () => {
     marginBottom: 100,
   };
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View>
-          <Text style={headerStyle}>Welcome to the TODO list app</Text>
-        </View>
-        <View>
-          <LoginPage></LoginPage>
-        </View>
-        {/*
-        <View className="col-md-8">
-          <CreateTaskPage></CreateTaskPage>
-        </View>
-        <View>
-          <ShowTasksPage />
-        </View>
-    */}
-      </ScrollView>
-    </SafeAreaView>
+    <MainContainer>
+      <SafeAreaView style={backgroundStyle}>
+        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <ScrollView
+          contentInsetAdjustmentBehavior="automatic"
+          style={backgroundStyle}>
+          <View>
+            <Text style={headerStyle}>Welcome to the TODO list app</Text>
+          </View>
+          <View></View>
+
+          {/*
+                <View>
+        <LoginPage></LoginPage>
+      </View>
+    <View className="col-md-8">
+      <CreateTaskPage></CreateTaskPage>
+    </View>
+    <View>
+      <ShowTasksPage />
+    </View>
+*/}
+        </ScrollView>
+      </SafeAreaView>
+    </MainContainer>
   );
 };
 
