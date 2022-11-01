@@ -9,7 +9,7 @@ export default Box = ({taskName, assignee}) => {
     <>
       <View style={styles.parent}>
         <View style={styles.bigChild}>
-          <Card>
+          <Card mode="outlined">
             <Card.Title
               title={fullTaskName}
               subtitle={fullAssignee}></Card.Title>

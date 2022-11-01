@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -20,10 +20,14 @@ import {
 import {create} from 'react-test-renderer';
 import api from '../../api/posts';
 import Box from '../../Box';
+import SInfo from 'react-native-sensitive-info';
+import {useFocusEffect} from '@react-navigation/native';
 
-export default ShowTasksScreen = () => {
+export default ShowTasksScreen = ({navigation}) => {
   const [showTasks, setShowTasks] = useState(true);
   const [myTodoItems, setMyTodoItems] = useState(undefined);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const flipShowTasks = async () => {
     if (!showTasks) {
@@ -32,30 +36,49 @@ export default ShowTasksScreen = () => {
     setShowTasks(!showTasks);
   };
   const fetchTasks = async apiUrl => {
+    const currUsername = await SInfo.getItem('username', {});
     try {
-      const response = await api.get(apiUrl);
+      const response = await api.get(apiUrl + '/' + currUsername);
       setMyTodoItems(response.data);
-      //console.log('RESP:' + JSON.stringify(response.data));
-      //console.log(response.data);
     } catch (err) {
       console.log('GOT ERROR WHEN FETCHING TASKS ' + err);
     }
   };
-  useEffect(() => {
-    fetchTasks('/api/todoitems');
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchTasks('/api/todoitems');
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, []),
+  );
+
+  if (!showTasks) {
+    return (
+      <>
+        <Button onPress={flipShowTasks}>
+          <Text style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
+            Your tasks - click to
+            {showTasks ? <Text> hide</Text> : <Text> show</Text>}
+          </Text>
+        </Button>
+      </>
+    );
+  }
 
   return (
     <>
-      <Text></Text>
-
       <Button onPress={flipShowTasks}>
         <Text style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
           Your tasks - click to
           {showTasks ? <Text> hide</Text> : <Text> show</Text>}
         </Text>
       </Button>
-      {typeof myTodoItems !== 'undefined' && showTasks && (
+      {typeof myTodoItems !== 'undefined' &&
+      showTasks &&
+      myTodoItems.length > 0 ? (
         <View style={styles.container}>
           <FlatList
             data={Object.keys(myTodoItems)}
@@ -67,6 +90,16 @@ export default ShowTasksScreen = () => {
             )}
           />
         </View>
+      ) : (
+        <Text
+          style={{
+            textAlign: 'center',
+            fontSize: 20,
+            fontWeight: 'bold',
+            top: '10%',
+          }}>
+          You have no TODO items
+        </Text>
       )}
     </>
   );

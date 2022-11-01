@@ -26,7 +26,17 @@ function MainContainer() {
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
             let rn = route.name;
-
+            {
+              /*
+            if (rn === loginName) {
+              iconName = focused ? 'home-outline' : 'home-outline';
+            } else if (rn === ShowTasks) {
+              iconName = focused ? 'earth' : 'earth';
+            } else if (rn === CreateTask) {
+              iconName = focused ? 'add-circle' : 'add-circle-outline';
+            }
+          */
+            }
             if (rn === loginName) {
               iconName = focused ? 'home-outline' : 'home-outline';
             } else if (rn === ShowTasks) {

@@ -6,7 +6,7 @@ import api from '../../api/posts';
 import SInfo from 'react-native-sensitive-info';
 
 export default LoginScreen = () => {
-  const [userName, setUsername] = useState('');
+  const [username, setUsername] = useState('');
 
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -21,29 +21,21 @@ export default LoginScreen = () => {
     setShowRegister(!showRegister);
   };
 
-  const fetchAndSetUsername = async id => {
-    try {
-      const response = await api.get('/api/getusername/' + id);
-      setUsername(response.data);
-    } catch (err) {
-      console.log('GOT ERROR WHEN FETCHING TASKS ' + err);
-    }
-  };
-
   const login = async (apiUrl, body) => {
     try {
       if (body.email != '' && body.password != '') {
         const response = await api.post(apiUrl, body);
         SInfo.setItem('token', response.data.token, {});
         SInfo.setItem('id', response.data.id, {});
-        console.log('LOGGA INN');
-        SInfo.getItem('id', {}).then(obj => fetchAndSetUsername(obj));
-        //console.log("username:"+)
-        //setUsername(SInfo.getItem('id'), {});
+        SInfo.setItem('username', response.data.username, {});
+
+        await setUsername(response.data.username);
       } else {
         console.log('Did not have username or password');
+        alert('Must enter username and password');
       }
     } catch (err) {
+      alert('error when logging in');
       console.log('ERROR WHEN LOGGIN IN ' + err);
     }
   };
@@ -61,6 +53,13 @@ export default LoginScreen = () => {
     }
   };
 
+  const logout = async () => {
+    SInfo.setItem('token', '', {});
+    SInfo.setItem('id', '', {});
+    SInfo.setItem('username', '', {});
+    await setUsername('');
+    alert('You logged out');
+  };
   /*
   let currId = SInfo.getItem('id', {});
   currId.then(e => console.log('ID IS:' + e));
@@ -73,12 +72,11 @@ export default LoginScreen = () => {
     <>
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
-          {userName !== '' && (
-            <Text style={{fontSize: 20}}>Username: {userName}</Text>
+          {username !== '' && (
+            <Text style={{fontSize: 20}}>Username: {username}</Text>
           )}
           <Text></Text>
           <Text></Text>
-
           <View>
             <View>
               <TextInput
@@ -107,7 +105,7 @@ export default LoginScreen = () => {
                   });
                 }}
                 outlined>
-                Login
+                <Text style={{color: 'green'}}>Login</Text>
               </Button>
             </View>
           </View>
@@ -120,7 +118,7 @@ export default LoginScreen = () => {
             {showRegister ? (
               <Text>Hide register</Text>
             ) : (
-              <Text>Register here</Text>
+              <Text style={{color: 'green'}}>Register</Text>
             )}
           </Button>
           {showRegister && (
@@ -165,6 +163,20 @@ export default LoginScreen = () => {
               </View>
             </View>
           )}
+          <View>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Text></Text>
+            <Button onPress={logout}>
+              <Text style={{color: 'red'}}>Logout</Text>
+            </Button>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </>
