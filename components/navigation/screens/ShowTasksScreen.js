@@ -19,7 +19,7 @@ import {
 } from 'react-native-paper';
 import {create} from 'react-test-renderer';
 import api from '../../api/posts';
-import Box from '../../Box';
+import TaskBox from '../../TaskBox';
 import SInfo from 'react-native-sensitive-info';
 import {useFocusEffect} from '@react-navigation/native';
 
@@ -83,7 +83,7 @@ export default ShowTasksScreen = ({navigation}) => {
           <FlatList
             data={Object.keys(myTodoItems)}
             renderItem={({item}) => (
-              <Box
+              <TaskBox
                 taskName={myTodoItems[item].title}
                 assignee={myTodoItems[item].assignee}
               />
