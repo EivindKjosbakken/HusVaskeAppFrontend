@@ -19,35 +19,40 @@ import {
 } from 'react-native-paper';
 import {create} from 'react-test-renderer';
 import api from '../../api/posts';
-import TaskBox from '../../TaskBox';
+import TaskBoxUnFinished from '../../TaskBoxUnFinished';
 import SInfo from 'react-native-sensitive-info';
 import {useFocusEffect} from '@react-navigation/native';
 
-export default ShowTasksScreen = ({navigation}) => {
+export default UnFinishedTasksScreen = () => {
   const [showTasks, setShowTasks] = useState(true);
   const [myTodoItems, setMyTodoItems] = useState(undefined);
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const flipShowTasks = async () => {
     if (!showTasks) {
-      await fetchTasks('/api/todoitems'); //if you are going to show tasks, then get updated info
+      await fetchUnFinishedTasks(); //if you are going to show tasks, then get updated info
     }
     setShowTasks(!showTasks);
   };
-  const fetchTasks = async apiUrl => {
+  const fetchUnFinishedTasks = async () => {
     const currUsername = await SInfo.getItem('username', {});
     try {
-      const response = await api.get(apiUrl + '/' + currUsername);
+      const response = await api.get(
+        '/api/unfinishedtodoitems' + '/' + currUsername,
+      );
       setMyTodoItems(response.data);
     } catch (err) {
       console.log('GOT ERROR WHEN FETCHING TASKS ' + err);
     }
   };
 
+  const refreshTasks = async () => {
+    console.log('refresher');
+    await fetchUnFinishedTasks();
+  };
+
   useFocusEffect(
     useCallback(() => {
-      fetchTasks('/api/todoitems');
+      fetchUnFinishedTasks();
       return () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
@@ -83,9 +88,11 @@ export default ShowTasksScreen = ({navigation}) => {
           <FlatList
             data={Object.keys(myTodoItems)}
             renderItem={({item}) => (
-              <TaskBox
+              <TaskBoxUnFinished
+                taskID={myTodoItems[item].id}
                 taskName={myTodoItems[item].title}
                 assignee={myTodoItems[item].assignee}
+                refreshTasks={refreshTasks}
               />
             )}
           />

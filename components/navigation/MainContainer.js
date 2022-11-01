@@ -7,12 +7,14 @@ import {View, Text, StyleSheet} from 'react-native';
 
 // Screens
 import LoginScreen from './screens/LoginScreen';
-import ShowTasksScreen from './screens/ShowTasksScreen';
+import UnFinishedTasksScreen from './screens/UnFinishedTasksScreen';
+import FinishedTasksScreen from './screens/FinishedTasksScreen';
 import CreateTaskScreen from './screens/CreateTaskScreen';
 
 //Screen names
 const loginName = 'Login/Register';
 const ShowTasks = 'Your tasks';
+const FinishedTasks = 'Finished tasks';
 const CreateTask = 'Create task';
 
 const Tab = createBottomTabNavigator();
@@ -27,20 +29,13 @@ function MainContainer() {
             let iconName;
             let rn = route.name;
             {
-              /*
-            if (rn === loginName) {
-              iconName = focused ? 'home-outline' : 'home-outline';
-            } else if (rn === ShowTasks) {
-              iconName = focused ? 'earth' : 'earth';
-            } else if (rn === CreateTask) {
-              iconName = focused ? 'add-circle' : 'add-circle-outline';
-            }
-          */
             }
             if (rn === loginName) {
               iconName = focused ? 'home-outline' : 'home-outline';
             } else if (rn === ShowTasks) {
               iconName = focused ? 'earth' : 'earth';
+            } else if (rn === FinishedTasks) {
+              iconName = focused ? 'earth-outline' : 'earth-outline';
             } else if (rn === CreateTask) {
               iconName = focused ? 'add-circle' : 'add-circle-outline';
             }
@@ -50,7 +45,8 @@ function MainContainer() {
           },
         })}>
         <Tab.Screen name={loginName} component={LoginScreen} />
-        <Tab.Screen name={ShowTasks} component={ShowTasksScreen} />
+        <Tab.Screen name={ShowTasks} component={UnFinishedTasksScreen} />
+        <Tab.Screen name={FinishedTasks} component={FinishedTasksScreen} />
         <Tab.Screen name={CreateTask} component={CreateTaskScreen} />
       </Tab.Navigator>
     </NavigationContainer>

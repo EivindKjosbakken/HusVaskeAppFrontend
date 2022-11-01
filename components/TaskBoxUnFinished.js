@@ -2,10 +2,25 @@ import {mdiToyBrickPlusOutline} from '@mdi/js';
 import React, {useEffect, useState} from 'react';
 import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
 import {TextInput, Button, Card} from 'react-native-paper';
+import api from './api/posts';
 
-export default TaskBox = ({taskName, assignee}) => {
+export default TaskBoxUnFinished = ({
+  taskID,
+  taskName,
+  assignee,
+  refreshTasks,
+}) => {
   const fullTaskName = 'Task: ' + taskName;
   const fullAssignee = 'Assignee: ' + assignee;
+
+  const finishTask = async ID => {
+    try {
+      await api.put('/api/finishtodoitem/' + ID);
+      await refreshTasks();
+    } catch {
+      alert('Could not finish task, something went wrong');
+    }
+  };
   return (
     <>
       <View style={styles.bigChild}>
@@ -14,9 +29,9 @@ export default TaskBox = ({taskName, assignee}) => {
           <View style={styles.buttonView}>
             <Button
               onPress={() => {
-                console.log('trykker ferdig');
+                finishTask(taskID);
               }}>
-              <Text style={styles.buttonText}>Done</Text>
+              <Text style={styles.buttonText}>Done </Text>
             </Button>
           </View>
         </Card>
