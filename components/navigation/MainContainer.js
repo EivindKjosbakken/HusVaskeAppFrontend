@@ -3,7 +3,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
 // Screens
 import LoginScreen from './screens/LoginScreen';
@@ -21,7 +21,7 @@ function MainContainer() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName={loginName}
+        initialRouteName={ShowTasks}
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
@@ -47,4 +47,13 @@ function MainContainer() {
   );
 }
 
+const styles = StyleSheet.create({
+  headerStyle: {
+    fontWeight: 'bold',
+    fontSize: 25,
+    textAlign: 'center',
+    marginTop: 40,
+    marginBottom: 100,
+  },
+});
 export default MainContainer;

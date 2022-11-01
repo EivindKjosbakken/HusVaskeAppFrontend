@@ -74,7 +74,7 @@ export default LoginScreen = () => {
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           {userName !== '' && (
-            <Text style={{fontSize: 30}}>Welcome {userName}</Text>
+            <Text style={{fontSize: 20}}>Username: {userName}</Text>
           )}
           <Text></Text>
           <Text></Text>

@@ -1,11 +1,28 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, SafeAreaView} from 'react-native';
-import {TextInput, Button} from 'react-native-paper';
+import {
+  View,
+  Text,
+  ScrollView,
+  SafeAreaView,
+  StyleSheet,
+  StatusBar,
+  FlatList,
+} from 'react-native';
+import {
+  TextInput,
+  Button,
+  Divider,
+  Avatar,
+  Card,
+  Title,
+  Paragraph,
+} from 'react-native-paper';
 import {create} from 'react-test-renderer';
 import api from '../../api/posts';
+import Box from '../../Box';
 
 export default ShowTasksScreen = () => {
-  const [showTasks, setShowTasks] = useState(false);
+  const [showTasks, setShowTasks] = useState(true);
   const [myTodoItems, setMyTodoItems] = useState(undefined);
 
   const flipShowTasks = async () => {
@@ -27,35 +44,41 @@ export default ShowTasksScreen = () => {
   useEffect(() => {
     fetchTasks('/api/todoitems');
   }, []);
+
   return (
     <>
-      <SafeAreaView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-          <Button onPress={flipShowTasks}>
-            <Text
-              style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
-              Your tasks - click to
-              {showTasks ? <Text> hide</Text> : <Text> show</Text>}
-            </Text>
-          </Button>
-          {typeof myTodoItems !== 'undefined' &&
-            showTasks &&
-            myTodoItems.map((item, index) => {
-              return (
-                <View id={index}>
-                  <Text>Task {index + 1}:</Text>
-                  <Text id={index}>Task: {item.title}</Text>
-                  <Text id={index}>Location: {item.location}</Text>
-                  <Text id={index}>Assignee: {item.assignee}</Text>
-                  <Text></Text>
-                </View>
-              );
-            })}
-        </ScrollView>
-      </SafeAreaView>
+      <Text></Text>
+
+      <Button onPress={flipShowTasks}>
+        <Text style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
+          Your tasks - click to
+          {showTasks ? <Text> hide</Text> : <Text> show</Text>}
+        </Text>
+      </Button>
+      {typeof myTodoItems !== 'undefined' && showTasks && (
+        <View style={styles.container}>
+          <FlatList
+            data={Object.keys(myTodoItems)}
+            renderItem={({item}) => (
+              <Box
+                taskName={myTodoItems[item].title}
+                assignee={myTodoItems[item].assignee}
+              />
+            )}
+          />
+        </View>
+      )}
     </>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 22,
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    height: 44,
+  },
+});
