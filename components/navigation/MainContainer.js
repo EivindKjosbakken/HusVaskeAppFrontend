@@ -6,13 +6,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {View, Text, StyleSheet} from 'react-native';
 
 // Screens
-import LoginScreen from './screens/LoginScreen';
+import AdministrativeScreen from './screens/AdministrativeScreen';
 import UnFinishedTasksScreen from './screens/UnFinishedTasksScreen';
 import FinishedTasksScreen from './screens/FinishedTasksScreen';
 import CreateTaskScreen from './screens/CreateTaskScreen';
 
 //Screen names
-const loginName = 'Login/Register';
+const Administrative = 'Administrative';
 const ShowTasks = 'Your tasks';
 const FinishedTasks = 'Finished tasks';
 const CreateTask = 'Create task';
@@ -23,14 +23,14 @@ function MainContainer() {
   return (
     <NavigationContainer>
       <Tab.Navigator
-        initialRouteName={ShowTasks}
+        initialRouteName={Administrative}
         screenOptions={({route}) => ({
           tabBarIcon: ({focused, color, size}) => {
             let iconName;
             let rn = route.name;
             {
             }
-            if (rn === loginName) {
+            if (rn === Administrative) {
               iconName = focused ? 'home-outline' : 'home-outline';
             } else if (rn === ShowTasks) {
               iconName = focused ? 'earth' : 'earth';
@@ -44,7 +44,7 @@ function MainContainer() {
             return <Ionicons name={iconName} size={30} />;
           },
         })}>
-        <Tab.Screen name={loginName} component={LoginScreen} />
+        <Tab.Screen name={Administrative} component={AdministrativeScreen} />
         <Tab.Screen name={ShowTasks} component={UnFinishedTasksScreen} />
         <Tab.Screen name={FinishedTasks} component={FinishedTasksScreen} />
         <Tab.Screen name={CreateTask} component={CreateTaskScreen} />

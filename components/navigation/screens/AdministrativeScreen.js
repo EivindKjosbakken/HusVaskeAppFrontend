@@ -1,11 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, ScrollView, SafeAreaView} from 'react-native';
-import {TextInput, Button} from 'react-native-paper';
+import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
+import {TextInput, Button, Modal, Portal, Provider} from 'react-native-paper';
 import {create} from 'react-test-renderer';
 import api from '../../api/posts';
 import SInfo from 'react-native-sensitive-info';
+import CreateGroupForm from '../../CreateGroupForm';
+import AddUserToGroupForm from '../../AddUserToGroupForm';
 
-export default LoginScreen = () => {
+export default AdministrativeScreen = () => {
   const [username, setUsername] = useState('');
 
   const [loginUsername, setLoginUsername] = useState('');
@@ -14,6 +16,14 @@ export default LoginScreen = () => {
   const [registerUsername, setRegisterUsername] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [registerEmail, setRegisterEmail] = useState('');
+
+  const [showCreateGroup, setShowCreateGroup] = useState(false);
+
+  const hideCreateGroupModal = () => setShowCreateGroup(false);
+
+  const [showAddUserToGroup, setShowAddUserToGroup] = useState(false);
+
+  const hideAddUserToGroupModal = () => setShowAddUserToGroup(false);
 
   const [showRegister, setShowRegister] = useState(false);
 
@@ -26,7 +36,7 @@ export default LoginScreen = () => {
       if (body.email != '' && body.password != '') {
         const response = await api.post(apiUrl, body);
         SInfo.setItem('token', response.data.token, {});
-        SInfo.setItem('id', response.data.id, {});
+        SInfo.setItem('userid', response.data.id, {});
         SInfo.setItem('username', response.data.username, {});
 
         await setUsername(response.data.username);
@@ -50,24 +60,54 @@ export default LoginScreen = () => {
       }
     } catch (err) {
       console.log('ERROR WHEN REGISTERING: ' + err);
+      alert('Registering failed, make sure email is unique');
     }
   };
 
   const logout = async () => {
     SInfo.setItem('token', '', {});
-    SInfo.setItem('id', '', {});
+    SInfo.setItem('userid', '', {});
     SInfo.setItem('username', '', {});
     await setUsername('');
     alert('You logged out');
   };
-  /*
-  let currId = SInfo.getItem('id', {});
-  currId.then(e => console.log('ID IS:' + e));
-  let currToken = SInfo.getItem('token', {});
-  console.log('TOKEN:' + currToken);
-  currToken.then(obj => console.log('TOKEN IS:' + obj));
-  */
 
+  if (showCreateGroup) {
+    // show the modal of making a group
+    return (
+      <Provider>
+        <Portal>
+          <Modal
+            visible={showCreateGroup}
+            onDismiss={hideCreateGroupModal}
+            contentContainerStyle={styles.containerStyle}>
+            <Text style={{textAlign: 'center'}}>
+              Click anywhere else to dismiss
+            </Text>
+            <CreateGroupForm></CreateGroupForm>
+          </Modal>
+        </Portal>
+      </Provider>
+    );
+  }
+  if (showAddUserToGroup) {
+    // show the modal of adding users to group
+    return (
+      <Provider>
+        <Portal>
+          <Modal
+            visible={showAddUserToGroup}
+            onDismiss={hideAddUserToGroupModal}
+            contentContainerStyle={styles.containerStyle}>
+            <Text style={{textAlign: 'center'}}>
+              Click anywhere else to dismiss
+            </Text>
+            <AddUserToGroupForm></AddUserToGroupForm>
+          </Modal>
+        </Portal>
+      </Provider>
+    );
+  }
   return (
     <>
       <SafeAreaView>
@@ -80,8 +120,8 @@ export default LoginScreen = () => {
           <View>
             <View>
               <TextInput
-                id="username"
-                label="Username"
+                id="email"
+                label="Email"
                 value={loginUsername}
                 onChangeText={text => setLoginUsername(text)}
               />
@@ -168,9 +208,18 @@ export default LoginScreen = () => {
             <Text></Text>
             <Text></Text>
             <Text></Text>
+            <Button
+              style={{marginTop: 30}}
+              onPress={() => setShowCreateGroup(true)}>
+              Create a group!
+            </Button>
             <Text></Text>
             <Text></Text>
-            <Text></Text>
+            <Button
+              style={{marginTop: 30}}
+              onPress={() => setShowAddUserToGroup(true)}>
+              Add user to a group!
+            </Button>
             <Text></Text>
             <Text></Text>
             <Button onPress={logout}>
@@ -182,3 +231,7 @@ export default LoginScreen = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  containerStyle: {backgroundColor: 'white', padding: 20},
+});
