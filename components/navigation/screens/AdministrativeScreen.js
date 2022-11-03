@@ -40,6 +40,7 @@ export default AdministrativeScreen = () => {
     SInfo.setItem('userid', '', {});
     SInfo.setItem('username', '', {});
     await setUsername('');
+
     try {
       if (body.email != '' && body.password != '') {
         const response = await api.post(apiUrl, body);
@@ -49,6 +50,7 @@ export default AdministrativeScreen = () => {
         setUserState({isLoggedIn: true});
 
         await setUsername(response.data.username);
+        console.log(await SInfo.getItem('token', {}));
 
         setSnackbarState({
           active: true,
@@ -56,7 +58,6 @@ export default AdministrativeScreen = () => {
           textColor: 'green',
         });
       } else {
-        console.log('Did not have username or password');
         setSnackbarState({
           active: true,
           text: 'Must enter correct username and password',
@@ -73,7 +74,6 @@ export default AdministrativeScreen = () => {
     try {
       if (body.email != '' && body.password != '') {
         const response = await api.post(apiUrl, body);
-        console.log(JSON.stringify(body) + ' POST WORKED:' + response.data);
       } else {
         console.log('Did not have username or password');
       }

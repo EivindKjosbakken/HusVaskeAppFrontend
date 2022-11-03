@@ -33,7 +33,7 @@ const App: () => Node = () => {
     text: '',
     textColor: 'black',
   });
-  const [userState, setUserState] = useState({isLoggedIn: false});
+  const [userState, setUserState] = useState({isLoggedIn: true}); //TODO this has to be false if in production
 
   const state = {
     snackbarState,

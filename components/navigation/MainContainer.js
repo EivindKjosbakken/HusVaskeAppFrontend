@@ -29,12 +29,6 @@ const Tab = createBottomTabNavigator();
 function MainContainer() {
   const {snackbarState, setSnackbarState, userState, setUserState} =
     useContext(AppContext);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      console.log('user loggedin state : ' + userState.isLoggedIn);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <NavigationContainer>

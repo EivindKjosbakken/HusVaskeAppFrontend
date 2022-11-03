@@ -21,7 +21,6 @@ export default CreateTaskScreen = () => {
     try {
       if (body.title != '' && body.location != '' && body.assignee != '') {
         const response = await api.post(apiUrl, body);
-        console.log(JSON.stringify(body) + ' POST WORKED:' + response.data);
         setSnackbarState({
           text: 'Task "' + taskName + '" added',
           active: true,

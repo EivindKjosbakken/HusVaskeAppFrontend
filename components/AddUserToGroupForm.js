@@ -37,6 +37,7 @@ export default AddUserToGroupForm = () => {
       GroupID: groupid,
       Role: userRole,
     };
+
     try {
       const response = await api.post('api/addusertogroup', body);
       setSnackbarState({
