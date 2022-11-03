@@ -17,7 +17,8 @@ import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
 
 export default AdministrativeScreen = () => {
-  const {snackbarState, setSnackbarState} = useContext(AppContext);
+  const {snackbarState, setSnackbarState, setUserState} =
+    useContext(AppContext);
 
   const [username, setUsername] = useState('');
 
@@ -27,14 +28,6 @@ export default AdministrativeScreen = () => {
   const [registerUsername, setRegisterUsername] = useState('');
   const [registerPassword, setRegisterPassword] = useState('');
   const [registerEmail, setRegisterEmail] = useState('');
-
-  const [showCreateGroup, setShowCreateGroup] = useState(false);
-
-  const hideCreateGroupModal = () => setShowCreateGroup(false);
-
-  const [showAddUserToGroup, setShowAddUserToGroup] = useState(false);
-
-  const hideAddUserToGroupModal = () => setShowAddUserToGroup(false);
 
   const [showRegister, setShowRegister] = useState(false);
 
@@ -53,6 +46,7 @@ export default AdministrativeScreen = () => {
         SInfo.setItem('token', response.data.token, {});
         SInfo.setItem('userid', response.data.id, {});
         SInfo.setItem('username', response.data.username, {});
+        setUserState({isLoggedIn: true});
 
         await setUsername(response.data.username);
 
@@ -97,6 +91,8 @@ export default AdministrativeScreen = () => {
     SInfo.setItem('token', '', {});
     SInfo.setItem('userid', '', {});
     SInfo.setItem('username', '', {});
+    setUserState({isLoggedIn: false});
+
     await setUsername('');
     setSnackbarState({
       active: true,
@@ -105,49 +101,15 @@ export default AdministrativeScreen = () => {
     });
   };
 
-  if (showCreateGroup) {
-    // show the modal of making a group
-    return (
-      <Provider>
-        <Portal>
-          <Modal
-            visible={showCreateGroup}
-            onDismiss={hideCreateGroupModal}
-            contentContainerStyle={styles.containerStyle}>
-            <Text style={{textAlign: 'center'}}>
-              Click anywhere else to dismiss
-            </Text>
-            <CreateGroupForm></CreateGroupForm>
-          </Modal>
-        </Portal>
-      </Provider>
-    );
-  }
-  if (showAddUserToGroup) {
-    // show the modal of adding users to group
-    return (
-      <Provider>
-        <Portal>
-          <Modal
-            visible={showAddUserToGroup}
-            onDismiss={hideAddUserToGroupModal}
-            contentContainerStyle={styles.containerStyle}>
-            <Text style={{textAlign: 'center'}}>
-              Click anywhere else to dismiss
-            </Text>
-            <AddUserToGroupForm></AddUserToGroupForm>
-          </Modal>
-        </Portal>
-      </Provider>
-    );
-  }
   return (
     <>
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <Text></Text>
 
-          <Text></Text>
+          <Text style={{fontWeight: 'bold', textAlign: 'center', fontSize: 25}}>
+            Login:
+          </Text>
           <View>
             <View>
               <TextInput
@@ -236,21 +198,6 @@ export default AdministrativeScreen = () => {
           )}
           <View>
             <Text></Text>
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
-            <Button
-              style={{marginTop: 30}}
-              onPress={() => setShowCreateGroup(true)}>
-              Create a group!
-            </Button>
-            <Text></Text>
-            <Text></Text>
-            <Button
-              style={{marginTop: 30}}
-              onPress={() => setShowAddUserToGroup(true)}>
-              Add user to a group!
-            </Button>
             <Text></Text>
             <Text></Text>
             <Button onPress={logout}>

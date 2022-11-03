@@ -16,7 +16,7 @@ export default AddUserToGroupForm = () => {
 
   const [groupsOwnerOf, setGroupsOwnerOf] = useState({
     value: '',
-    list: [{_id: '1', value: 'Tester'}],
+    list: [],
     selectedList: [],
     error: '',
   });
@@ -102,20 +102,19 @@ export default AddUserToGroupForm = () => {
     <>
       <View>
         <View>
-          <Button onPress={fetchGroupsUserIsOwnerOf}>TESTING</Button>
           <PaperSelect
             label="Select group"
-            value={groupsOwnerOf.value}
+            value={groupsOwnerOf?.value || ''}
             onSelection={value => {
               setGroupsOwnerOf({
                 ...groupsOwnerOf,
-                value: value.selectedList[0]['value'],
-                selectedList: value.selectedList,
+                value: value?.selectedList[0]?.value || '', // TODO nå er det feil med icon her som gjør at du ikke ser at du unselecter (må typ trykke to ganger for å selecte en group)  buggen, annahver gang får jeg empty group
+                selectedList: value?.selectedList || [],
                 error: '',
               });
             }}
-            arrayList={groupsOwnerOf.list}
-            selectedArrayList={groupsOwnerOf.selectedList}
+            arrayList={groupsOwnerOf?.list || []}
+            selectedArrayList={groupsOwnerOf?.selectedList || []}
             errorText={''}
             multiEnable={false}
           />

@@ -33,10 +33,13 @@ const App: () => Node = () => {
     text: '',
     textColor: 'black',
   });
+  const [userState, setUserState] = useState({isLoggedIn: false});
 
   const state = {
     snackbarState,
     setSnackbarState,
+    userState,
+    setUserState,
   };
 
   return (
