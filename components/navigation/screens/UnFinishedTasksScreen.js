@@ -46,7 +46,6 @@ export default UnFinishedTasksScreen = () => {
   };
 
   const refreshTasks = async () => {
-    console.log('refresher');
     await fetchUnFinishedTasks();
   };
 

@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {View, Text, ScrollView, SafeAreaView} from 'react-native';
-import {TextInput, Button} from 'react-native-paper';
-import {create} from 'react-test-renderer';
+import {TextInput, Button, Snackbar} from 'react-native-paper';
 import api from '../../api/posts';
+import AppContext from '../../AppContext';
+import SnackbarComponent from '../../SnackbarComponent';
 
 export default CreateTaskScreen = () => {
   const [taskName, setTaskName] = useState('');
@@ -14,12 +15,18 @@ export default CreateTaskScreen = () => {
   const flipShowAddTodoItem = () => {
     setShowAddTodoItem(!showAddTodoItem);
   };
+  const {snackbarState, setSnackbarState} = useContext(AppContext);
 
   const createTask = async (apiUrl, body) => {
     try {
       if (body.title != '' && body.location != '' && body.assignee != '') {
         const response = await api.post(apiUrl, body);
         console.log(JSON.stringify(body) + ' POST WORKED:' + response.data);
+        setSnackbarState({
+          text: 'Task "' + taskName + '" added',
+          active: true,
+          textColor: 'green',
+        });
       } else {
         console.log('BODY WAS EMPTY');
       }
@@ -34,6 +41,7 @@ export default CreateTaskScreen = () => {
         <ScrollView contentInsetAdjustmentBehavior="automatic">
           <Text></Text>
           <Text></Text>
+
           <Text></Text>
           <View>
             <Button onPress={flipShowAddTodoItem} outlined>
@@ -87,6 +95,7 @@ export default CreateTaskScreen = () => {
           <Text></Text>
           <Text></Text>
         </ScrollView>
+        <SnackbarComponent></SnackbarComponent>
       </SafeAreaView>
     </>
   );

@@ -1,7 +1,6 @@
-import {mdiToyBrickPlusOutline} from '@mdi/js';
-import React, {useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
-import {TextInput, Button, Card} from 'react-native-paper';
+import {Button, Card} from 'react-native-paper';
 import api from './api/posts';
 
 export default TaskBoxUnFinished = ({

@@ -1,13 +1,24 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
-import {TextInput, Button, Modal, Portal, Provider} from 'react-native-paper';
+import {
+  TextInput,
+  Button,
+  Modal,
+  Portal,
+  Provider,
+  Snackbar,
+} from 'react-native-paper';
 import {create} from 'react-test-renderer';
 import api from '../../api/posts';
 import SInfo from 'react-native-sensitive-info';
 import CreateGroupForm from '../../CreateGroupForm';
 import AddUserToGroupForm from '../../AddUserToGroupForm';
+import SnackbarComponent from '../../SnackbarComponent';
+import AppContext from '../../AppContext';
 
 export default AdministrativeScreen = () => {
+  const {snackbarState, setSnackbarState} = useContext(AppContext);
+
   const [username, setUsername] = useState('');
 
   const [loginUsername, setLoginUsername] = useState('');
@@ -32,6 +43,10 @@ export default AdministrativeScreen = () => {
   };
 
   const login = async (apiUrl, body) => {
+    SInfo.setItem('token', '', {});
+    SInfo.setItem('userid', '', {});
+    SInfo.setItem('username', '', {});
+    await setUsername('');
     try {
       if (body.email != '' && body.password != '') {
         const response = await api.post(apiUrl, body);
@@ -40,9 +55,19 @@ export default AdministrativeScreen = () => {
         SInfo.setItem('username', response.data.username, {});
 
         await setUsername(response.data.username);
+
+        setSnackbarState({
+          active: true,
+          text: 'Logged in as: ' + response.data.username,
+          textColor: 'green',
+        });
       } else {
         console.log('Did not have username or password');
-        alert('Must enter username and password');
+        setSnackbarState({
+          active: true,
+          text: 'Must enter correct username and password',
+          textColor: 'red',
+        });
       }
     } catch (err) {
       alert('error when logging in');
@@ -60,7 +85,11 @@ export default AdministrativeScreen = () => {
       }
     } catch (err) {
       console.log('ERROR WHEN REGISTERING: ' + err);
-      alert('Registering failed, make sure email is unique');
+      setSnackbarState({
+        active: true,
+        text: 'Error when registering, make sure email is unique',
+        textColor: 'red',
+      });
     }
   };
 
@@ -69,7 +98,11 @@ export default AdministrativeScreen = () => {
     SInfo.setItem('userid', '', {});
     SInfo.setItem('username', '', {});
     await setUsername('');
-    alert('You logged out');
+    setSnackbarState({
+      active: true,
+      text: 'You logged out',
+      textColor: 'green',
+    });
   };
 
   if (showCreateGroup) {
@@ -112,10 +145,8 @@ export default AdministrativeScreen = () => {
     <>
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
-          {username !== '' && (
-            <Text style={{fontSize: 20}}>Username: {username}</Text>
-          )}
           <Text></Text>
+
           <Text></Text>
           <View>
             <View>
@@ -227,6 +258,7 @@ export default AdministrativeScreen = () => {
             </Button>
           </View>
         </ScrollView>
+        <SnackbarComponent></SnackbarComponent>
       </SafeAreaView>
     </>
   );

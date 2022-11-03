@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, createContext} from 'react';
 import {Button} from 'react-native-paper';
 
 import {Users} from './components/Users';
@@ -25,9 +25,25 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import MainContainer from './components/navigation/MainContainer';
+import AppContext from './components/AppContext';
 
 const App: () => Node = () => {
-  return <MainContainer></MainContainer>;
+  const [snackbarState, setSnackbarState] = useState({
+    active: false,
+    text: '',
+    textColor: 'black',
+  });
+
+  const state = {
+    snackbarState,
+    setSnackbarState,
+  };
+
+  return (
+    <AppContext.Provider value={state}>
+      <MainContainer></MainContainer>
+    </AppContext.Provider>
+  );
 };
 
 export default App;

@@ -1,12 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {View, Picker} from 'react-native';
+import React, {useEffect, useState, useContext} from 'react';
+import {View} from 'react-native';
 import {TextInput, Button, Modal, Portal, Provider} from 'react-native-paper';
 import api from './api/posts';
 import {PaperSelect} from 'react-native-paper-select';
 import SInfo from 'react-native-sensitive-info';
-import {mdiConsoleLine} from '@mdi/js';
+import SnackbarComponent from './SnackbarComponent';
+import AppContext from './AppContext';
 
 export default AddUserToGroupForm = () => {
+  const {snackbarState, setSnackbarState} = useContext(AppContext);
+
   const [userEmail, setUserEmail] = useState('');
   const [group, setGroup] = useState('');
   const [userRole, setUserRole] = useState('');
@@ -19,12 +22,14 @@ export default AddUserToGroupForm = () => {
   });
 
   const addUserToGroup = async () => {
-    await console.log(groupsOwnerOf);
     const groupid =
       (await groupsOwnerOf?.selectedList[0]['groupID']) || undefined;
-    await console.log(' _ _ _ NÅ SENDER VI GROUP ID: _ _ _  ' + groupid);
     if (groupid === undefined) {
-      alert('Group not found');
+      setSnackbarState({
+        active: true,
+        text: 'Group not found',
+        textColor: 'red',
+      });
       return;
     }
     body = {
@@ -34,15 +39,23 @@ export default AddUserToGroupForm = () => {
     };
     try {
       const response = await api.post('api/addusertogroup', body);
-      alert(
-        'USER WITH EMAIL ' +
-          email +
+      setSnackbarState({
+        active: true,
+        text:
+          'USER WITH EMAIL ' +
+          userEmail +
           ' WAS ADDED WITH ROLE: ' +
-          role +
+          userRole +
           ' TO GROUP: ' +
-          groupName,
-      );
+          groupsOwnerOf?.selectedList[0]['value'],
+        textColor: 'green',
+      });
     } catch (err) {
+      setSnackbarState({
+        active: true,
+        text: 'User already in group',
+        textColor: 'red',
+      });
       console.log('ERROR WHEN ADDING USER TO A GROUP: ' + err);
     }
   };
@@ -55,9 +68,12 @@ export default AddUserToGroupForm = () => {
       currUsername === undefined ||
       currUsername === ''
     ) {
-      alert('Must log in to create group');
+      setSnackbarState({
+        active: true,
+        text: 'Must log in to create group',
+        textColor: 'red',
+      });
     }
-    console.log('\n\n\n___FETCHER___\n\n\n');
     try {
       const response = await api.get('/api/groupsownerof/' + currUserID); //get the groups the user is owner of
 
@@ -91,8 +107,6 @@ export default AddUserToGroupForm = () => {
             label="Select group"
             value={groupsOwnerOf.value}
             onSelection={value => {
-              //TODO feilen skjer nå denne kjører
-              console.log('KJLRER ON SELECT\n\n\n');
               setGroupsOwnerOf({
                 ...groupsOwnerOf,
                 value: value.selectedList[0]['value'],
@@ -131,6 +145,7 @@ export default AddUserToGroupForm = () => {
             Add user to group
           </Button>
         </View>
+        <SnackbarComponent></SnackbarComponent>
       </View>
     </>
   );
