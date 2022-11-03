@@ -11,8 +11,6 @@ import {
 import {create} from 'react-test-renderer';
 import api from '../../api/posts';
 import SInfo from 'react-native-sensitive-info';
-import CreateGroupForm from '../../CreateGroupForm';
-import AddUserToGroupForm from '../../AddUserToGroupForm';
 import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
 

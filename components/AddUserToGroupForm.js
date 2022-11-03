@@ -11,7 +11,6 @@ export default AddUserToGroupForm = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
 
   const [userEmail, setUserEmail] = useState('');
-  const [group, setGroup] = useState('');
   const [userRole, setUserRole] = useState('');
 
   const [groupsOwnerOf, setGroupsOwnerOf] = useState({
