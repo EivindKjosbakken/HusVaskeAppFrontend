@@ -10,8 +10,8 @@ import {
 } from 'react-native-paper';
 import api from '../../api/posts';
 import SInfo from 'react-native-sensitive-info';
-import CreateGroupForm from '../../CreateGroupForm';
-import AddUserToGroupForm from '../../AddUserToGroupForm';
+import CreateGroupForm from '../../forms/CreateGroupForm';
+import AddUserToGroupForm from '../../forms/AddUserToGroupForm';
 import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
 

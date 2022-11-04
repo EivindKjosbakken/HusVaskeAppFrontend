@@ -2,7 +2,7 @@ import {mdiToyBrickPlusOutline} from '@mdi/js';
 import React, {useEffect, useState} from 'react';
 import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
 import {TextInput, Button, Card} from 'react-native-paper';
-import api from './api/posts';
+import api from '../api/posts';
 
 export default TaskBoxFinished = ({
   taskID,
@@ -26,12 +26,20 @@ export default TaskBoxFinished = ({
       <View style={styles.bigChild}>
         <Card mode="outlined">
           <Card.Title title={fullTaskName} subtitle={fullAssignee}></Card.Title>
-          <View style={styles.buttonView}>
+          <View style={styles.detailsButtonView}>
+            <Button
+              onPress={() => {
+                console.log('SHOW DETAILS');
+              }}>
+              <Text style={styles.detailsButtonText}>Details </Text>
+            </Button>
+          </View>
+          <View style={styles.doneButtonView}>
             <Button
               onPress={() => {
                 unFinishTask(taskID);
               }}>
-              <Text style={styles.buttonText}>Undo </Text>
+              <Text style={styles.doneButtonText}>Undo </Text>
             </Button>
           </View>
         </Card>
@@ -47,14 +55,29 @@ const styles = StyleSheet.create({
     width: '30%',
   },
   bigChild: {flexBasis: '100%', width: '100%'},
-  buttonView: {
+  doneButtonView: {
     position: 'absolute',
-    left: '70%',
+    left: '75%',
     top: '20%',
   },
-  buttonText: {
-    color: 'red',
-    fontSize: 20,
+  detailsButtonView: {
+    position: 'absolute',
+    left: '52%',
+    top: '20%',
+  },
+  doneButtonText: {
+    color: '#F55B25',
+    fontSize: 15,
+    fontFamily: 'Times New Roman',
+    paddingLeft: 30,
+    paddingRight: 30,
+    textShadowColor: '#8B8484',
+    textShadowOffset: {width: 5, height: 5},
+    textShadowRadius: 12,
+  },
+  detailsButtonText: {
+    color: '#4BB4DF',
+    fontSize: 15,
     fontFamily: 'Times New Roman',
     paddingLeft: 30,
     paddingRight: 30,

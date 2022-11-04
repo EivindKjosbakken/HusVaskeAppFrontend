@@ -69,9 +69,7 @@ export default CreateTaskScreen = () => {
   };
 
   const fetchUsersInChosenGroup = async () => {
-    console.log(' DEN ER : ' + groupsOwnerOf.selectedList);
     if (groupsOwnerOf?.selectedList.length === 0) {
-      console.log('LISTA ER 0 LANG');
       return;
     }
     const groupid =
@@ -88,9 +86,8 @@ export default CreateTaskScreen = () => {
 
     try {
       const response = await api.get('api/usersingroup/' + groupid);
-      console.log('responsen var : ' + JSON.stringify(response.data));
       response.data.map(obj => {
-        //TODO dette er shitty løsning, fiks det, bug er fordi paper select funker tydeligvis bare med col "value" (fant ikke noen løsning på det)
+        //TODO dette er shitty løsning, fiks det! Bug er fordi paper select funker tydeligvis bare med col "value" (fant ikke noen løsning på det)
         //TODO bad solution, had to change name of key to get the PaperSelect to work (only accepted key "value" for some reason)
         obj['value'] = obj['username'];
         delete obj['username'];
@@ -207,7 +204,6 @@ export default CreateTaskScreen = () => {
                     label="Select assignee"
                     value={usersInGroup?.value || ''}
                     onSelection={value => {
-                      console.log('VALUE ER NP : ', value);
                       setUsersInGroup({
                         ...usersInGroup,
                         value: value?.selectedList[0]?.value || '', // TODO nå er det feil med icon her som gjør at du ikke ser at du unselecter (må typ trykke to ganger for å selecte en group)  buggen, annahver gang får jeg empty group

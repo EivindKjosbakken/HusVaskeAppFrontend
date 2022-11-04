@@ -16,9 +16,10 @@ import {
   Card,
   Title,
   Paragraph,
+  Provider,
 } from 'react-native-paper';
 import api from '../../api/posts';
-import TaskBoxFinished from '../../TaskBoxFinished';
+import TaskBoxFinished from '../../subcomponents/TaskBoxFinished';
 import SInfo from 'react-native-sensitive-info';
 import {useFocusEffect} from '@react-navigation/native';
 

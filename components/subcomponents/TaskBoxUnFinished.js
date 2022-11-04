@@ -1,13 +1,15 @@
 import React, {useContext} from 'react';
 import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
 import {Button, Card} from 'react-native-paper';
-import api from './api/posts';
+import api from '../api/posts';
+import DetailedTaskView from './DetailedTaskView';
 
 export default TaskBoxUnFinished = ({
   taskID,
   taskName,
   assignee,
   refreshTasks,
+  provideDetails,
 }) => {
   const fullTaskName = 'Task: ' + taskName;
   const fullAssignee = 'Assignee: ' + assignee;
@@ -25,12 +27,20 @@ export default TaskBoxUnFinished = ({
       <View style={styles.bigChild}>
         <Card mode="outlined">
           <Card.Title title={fullTaskName} subtitle={fullAssignee}></Card.Title>
-          <View style={styles.buttonView}>
+          <View style={styles.detailsButtonView}>
+            <Button
+              onPress={() => {
+                provideDetails(taskName, assignee);
+              }}>
+              <Text style={styles.detailsButtonText}>Details </Text>
+            </Button>
+          </View>
+          <View style={styles.doneButtonView}>
             <Button
               onPress={() => {
                 finishTask(taskID);
               }}>
-              <Text style={styles.buttonText}>Done </Text>
+              <Text style={styles.doneButtonText}>Done </Text>
             </Button>
           </View>
         </Card>
@@ -46,14 +56,29 @@ const styles = StyleSheet.create({
     width: '30%',
   },
   bigChild: {flexBasis: '100%', width: '100%'},
-  buttonView: {
+  doneButtonView: {
     position: 'absolute',
-    left: '70%',
+    left: '75%',
     top: '20%',
   },
-  buttonText: {
+  detailsButtonView: {
+    position: 'absolute',
+    left: '52%',
+    top: '20%',
+  },
+  doneButtonText: {
     color: '#4DD56C',
-    fontSize: 20,
+    fontSize: 15,
+    fontFamily: 'Times New Roman',
+    paddingLeft: 30,
+    paddingRight: 30,
+    textShadowColor: '#8B8484',
+    textShadowOffset: {width: 5, height: 5},
+    textShadowRadius: 12,
+  },
+  detailsButtonText: {
+    color: '#4BB4DF',
+    fontSize: 15,
     fontFamily: 'Times New Roman',
     paddingLeft: 30,
     paddingRight: 30,

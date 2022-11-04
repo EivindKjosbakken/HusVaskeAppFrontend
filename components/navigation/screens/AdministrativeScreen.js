@@ -48,7 +48,6 @@ export default AdministrativeScreen = () => {
         setUserState({isLoggedIn: true});
 
         await setUsername(response.data.username);
-        console.log(await SInfo.getItem('token', {}));
 
         setSnackbarState({
           active: true,

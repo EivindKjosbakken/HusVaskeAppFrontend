@@ -3,6 +3,9 @@ data/python
 data/python.zip
 data/*.pkl
 
+*.plist
+*.lock
+*.pbxproj
 # Trained models
 model_codesearchnet
 model_cosqa_continue_training

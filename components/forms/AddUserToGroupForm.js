@@ -1,11 +1,11 @@
 import React, {useEffect, useState, useContext} from 'react';
 import {View} from 'react-native';
 import {TextInput, Button, Modal, Portal, Provider} from 'react-native-paper';
-import api from './api/posts';
+import api from '../api/posts';
 import {PaperSelect} from 'react-native-paper-select';
 import SInfo from 'react-native-sensitive-info';
-import SnackbarComponent from './SnackbarComponent';
-import AppContext from './AppContext';
+import SnackbarComponent from '../SnackbarComponent';
+import AppContext from '../AppContext';
 
 export default AddUserToGroupForm = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
