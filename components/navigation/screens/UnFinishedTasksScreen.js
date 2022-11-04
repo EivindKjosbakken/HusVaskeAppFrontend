@@ -53,13 +53,34 @@ export default UnFinishedTasksScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [taskName, setTaskName] = useState('Empty title');
   const [assignee, setAssignee] = useState('Empty assignee');
-  const [createdDate, setCreatedDate] = useState('Unknown date');
-  const [createdBy, setCreatedBy] = useState('Unknown creator');
+  const [location, setLocation] = useState('Empty location');
+  const [groupName, setGroupName] = useState('Empty group name');
+  const [timeCreated, setTimeCreated] = useState('Unknown date');
+  const [timeFinished, setTimeFinished] = useState('Unknown date');
 
-  const provideDetails = async (taskName, assignee) => {
-    await setTaskName(taskName);
-    await setAssignee(assignee);
-    await setIsVisible(true);
+  const provideDetails = async taskID => {
+    //myTodoItems
+    const currItem = myTodoItems.find(ele => {
+      return ele.id == taskID;
+    });
+    setTaskName(currItem?.title);
+    setAssignee(currItem?.assignee);
+    setIsVisible(true);
+    setLocation(currItem?.location);
+
+    setTimeCreated(
+      'Date: ' +
+        currItem?.timeCreated.slice(0, 10) +
+        ' , time: ' +
+        currItem?.timeCreated.slice(11, 19),
+    );
+    if (!currItem?.timeFinished) {
+      setTimeFinished('Task not finished yet');
+    } else {
+      setTimeFinished(currItem?.timeFinished);
+    }
+    const response = await api.get('/api/groupnamefromid/' + currItem?.groupID);
+    setGroupName(response.data);
   };
 
   useFocusEffect(
@@ -126,6 +147,10 @@ export default UnFinishedTasksScreen = () => {
           isVisible={isVisible}
           taskName={taskName}
           assignee={assignee}
+          location={location}
+          groupName={groupName}
+          timeCreated={timeCreated}
+          timeFinished={timeFinished}
           setIsVisible={setIsVisible}></DetailedTaskView>
       </Provider>
     </>

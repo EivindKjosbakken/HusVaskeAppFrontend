@@ -6,8 +6,10 @@ export default DetailedTaskView = ({
   isVisible,
   taskName,
   assignee,
-  createdDate,
-  createdBy,
+  location,
+  groupName,
+  timeCreated,
+  timeFinished,
   setIsVisible,
 }) => {
   const containerStyle = {backgroundColor: 'white', padding: 20};
@@ -25,8 +27,10 @@ export default DetailedTaskView = ({
         </Text>
         <Text></Text>
         <Text>Assignee: {assignee}</Text>
-        <Text>Task created by: {createdBy}</Text>
-        <Text>Task created at: {createdDate}</Text>
+        <Text>Task location: {location}</Text>
+        <Text>Task created at: {timeCreated}</Text>
+        <Text>Task finished at: {timeFinished}</Text>
+        <Text>Group Name: {groupName}</Text>
       </Modal>
     </>
   );

@@ -30,7 +30,7 @@ export default TaskBoxUnFinished = ({
           <View style={styles.detailsButtonView}>
             <Button
               onPress={() => {
-                provideDetails(taskName, assignee);
+                provideDetails(taskID);
               }}>
               <Text style={styles.detailsButtonText}>Details </Text>
             </Button>

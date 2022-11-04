@@ -51,6 +51,39 @@ export default FinishedTasksScreen = () => {
     await fetchFinishedTasks();
   };
 
+  const [isVisible, setIsVisible] = useState(false);
+  const [taskName, setTaskName] = useState('Empty title');
+  const [assignee, setAssignee] = useState('Empty assignee');
+  const [location, setLocation] = useState('Empty location');
+  const [groupName, setGroupName] = useState('Empty group name');
+  const [timeCreated, setTimeCreated] = useState('Unknown date');
+  const [timeFinished, setTimeFinished] = useState('Unknown date');
+
+  const provideDetails = async taskID => {
+    //myTodoItems
+    const currItem = myTodoItems.find(ele => {
+      return ele.id == taskID;
+    });
+    setTaskName(currItem?.title);
+    setAssignee(currItem?.assignee);
+    setIsVisible(true);
+    setLocation(currItem?.location);
+
+    setTimeCreated(
+      'Date: ' +
+        currItem?.timeCreated.slice(0, 10) +
+        ' , time: ' +
+        currItem?.timeCreated.slice(11, 19),
+    );
+    if (!currItem?.timeFinished) {
+      setTimeFinished('Task not finished yet');
+    } else {
+      setTimeFinished(currItem?.timeFinished);
+    }
+    const response = await api.get('/api/groupnamefromid/' + currItem?.groupID);
+    setGroupName(response.data);
+  };
+
   useFocusEffect(
     useCallback(() => {
       fetchFinishedTasks();
@@ -76,39 +109,51 @@ export default FinishedTasksScreen = () => {
 
   return (
     <>
-      <Button onPress={flipShowTasks}>
-        <Text style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
-          Your finished tasks - click to
-          {showTasks ? <Text> hide</Text> : <Text> show</Text>}
-        </Text>
-      </Button>
-      {typeof myTodoItems !== 'undefined' &&
-      showTasks &&
-      myTodoItems.length > 0 ? (
-        <View style={styles.container}>
-          <FlatList
-            data={Object.keys(myTodoItems)}
-            renderItem={({item}) => (
-              <TaskBoxFinished
-                taskID={myTodoItems[item].id}
-                taskName={myTodoItems[item].title}
-                assignee={myTodoItems[item].assignee}
-                refreshTasks={refreshTasks}
-              />
-            )}
-          />
-        </View>
-      ) : (
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 20,
-            fontWeight: 'bold',
-            top: '10%',
-          }}>
-          You have no finished TODO items
-        </Text>
-      )}
+      <Provider>
+        <Button onPress={flipShowTasks}>
+          <Text style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
+            Your finished tasks - click to
+            {showTasks ? <Text> hide</Text> : <Text> show</Text>}
+          </Text>
+        </Button>
+        {typeof myTodoItems !== 'undefined' &&
+        showTasks &&
+        myTodoItems.length > 0 ? (
+          <View style={styles.container}>
+            <FlatList
+              data={Object.keys(myTodoItems)}
+              renderItem={({item}) => (
+                <TaskBoxFinished
+                  taskID={myTodoItems[item].id}
+                  taskName={myTodoItems[item].title}
+                  assignee={myTodoItems[item].assignee}
+                  refreshTasks={refreshTasks}
+                  provideDetails={provideDetails}
+                />
+              )}
+            />
+          </View>
+        ) : (
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 20,
+              fontWeight: 'bold',
+              top: '10%',
+            }}>
+            You have no finished TODO items
+          </Text>
+        )}
+        <DetailedTaskView
+          isVisible={isVisible}
+          taskName={taskName}
+          assignee={assignee}
+          location={location}
+          groupName={groupName}
+          timeCreated={timeCreated}
+          timeFinished={timeFinished}
+          setIsVisible={setIsVisible}></DetailedTaskView>
+      </Provider>
     </>
   );
 };

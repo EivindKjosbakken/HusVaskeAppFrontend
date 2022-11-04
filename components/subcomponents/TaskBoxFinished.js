@@ -9,6 +9,7 @@ export default TaskBoxFinished = ({
   taskName,
   assignee,
   refreshTasks,
+  provideDetails,
 }) => {
   const fullTaskName = 'Task: ' + taskName;
   const fullAssignee = 'Assignee: ' + assignee;
@@ -29,7 +30,7 @@ export default TaskBoxFinished = ({
           <View style={styles.detailsButtonView}>
             <Button
               onPress={() => {
-                console.log('SHOW DETAILS');
+                provideDetails(taskID);
               }}>
               <Text style={styles.detailsButtonText}>Details </Text>
             </Button>
