@@ -34,6 +34,7 @@ export default UnFinishedTasksScreen = () => {
     }
     setShowTasks(!showTasks);
   };
+
   const fetchUnFinishedTasks = async () => {
     const currUsername = await SInfo.getItem('username', {});
     try {
@@ -57,6 +58,8 @@ export default UnFinishedTasksScreen = () => {
   const [groupName, setGroupName] = useState('Empty group name');
   const [timeCreated, setTimeCreated] = useState('Unknown date');
   const [timeFinished, setTimeFinished] = useState('Unknown date');
+  const [isShowProof, setIsShowProof] = useState('Uknown if show proof');
+  const [price, setPrice] = useState('Unknown price');
 
   const provideDetails = async taskID => {
     //myTodoItems
@@ -67,6 +70,8 @@ export default UnFinishedTasksScreen = () => {
     setAssignee(currItem?.assignee);
     setIsVisible(true);
     setLocation(currItem?.location);
+    setIsShowProof(currItem?.isShowProof);
+    setPrice(currItem?.price);
 
     setTimeCreated(
       'Date: ' +
@@ -151,6 +156,8 @@ export default UnFinishedTasksScreen = () => {
           groupName={groupName}
           timeCreated={timeCreated}
           timeFinished={timeFinished}
+          isShowProof={isShowProof}
+          price={price}
           setIsVisible={setIsVisible}></DetailedTaskView>
       </Provider>
     </>

@@ -71,6 +71,11 @@ export default AdministrativeScreen = () => {
     try {
       if (body.email != '' && body.password != '') {
         const response = await api.post(apiUrl, body);
+        setSnackbarState({
+          active: true,
+          text: 'Registered user :' + body.username,
+          textColor: 'green',
+        });
       } else {
         console.log('Did not have username or password');
       }

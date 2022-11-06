@@ -10,6 +10,8 @@ export default DetailedTaskView = ({
   groupName,
   timeCreated,
   timeFinished,
+  isShowProof,
+  price,
   setIsVisible,
 }) => {
   const containerStyle = {backgroundColor: 'white', padding: 20};
@@ -31,6 +33,10 @@ export default DetailedTaskView = ({
         <Text>Task created at: {timeCreated}</Text>
         <Text>Task finished at: {timeFinished}</Text>
         <Text>Group Name: {groupName}</Text>
+        <Text>
+          Requires proof: {isShowProof ? <Text>Yes</Text> : <Text>No</Text>}
+        </Text>
+        <Text>Task price: {price}</Text>
       </Modal>
     </>
   );

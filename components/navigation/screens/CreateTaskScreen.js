@@ -1,20 +1,26 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {View, Text, ScrollView, SafeAreaView} from 'react-native';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
+import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
 import {TextInput, Button, Modal, Portal, Provider} from 'react-native-paper';
 import api from '../../api/posts';
 import {PaperSelect} from 'react-native-paper-select';
 import SInfo from 'react-native-sensitive-info';
+import {useFocusEffect} from '@react-navigation/native';
 import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
+import {Switch} from 'react-native-switch';
+import {style} from 'styled-system';
 
 export default CreateTaskScreen = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
 
   const [taskName, setTaskName] = useState('');
   const [location, setLocation] = useState('');
-  const [assignee, setAssignee] = useState('');
+  const [isShowProof, setIsShowProof] = useState(false);
+  const [price, setPrice] = useState('0');
 
-  const [showAddTodoItem, setShowAddTodoItem] = useState(false);
+  const toggleIsShowProof = () => {
+    setIsShowProof(!isShowProof);
+  };
 
   const [groupsOwnerOf, setGroupsOwnerOf] = useState({
     value: '',
@@ -29,10 +35,6 @@ export default CreateTaskScreen = () => {
     selectedList: [],
     error: '',
   });
-
-  const flipShowAddTodoItem = () => {
-    setShowAddTodoItem(!showAddTodoItem);
-  };
 
   const fetchGroupsUserIsOwnerOf = async () => {
     const currUserID = await SInfo.getItem('userid', {});
@@ -107,7 +109,7 @@ export default CreateTaskScreen = () => {
     const groupid =
       (await groupsOwnerOf?.selectedList[0]['groupID']) || undefined;
 
-    const userid =
+    const CreatedByUserID =
       (await groupsOwnerOf?.selectedList[0]['userID']) || undefined;
 
     if (groupid === undefined) {
@@ -121,10 +123,13 @@ export default CreateTaskScreen = () => {
 
     body = {
       title: taskName,
-      userID: usersInGroup?.selectedList[0]['id'],
+      AssigneeUserID: usersInGroup?.selectedList[0]['id'],
       groupID: groupid,
       assignee: usersInGroup?.selectedList[0]['value'], // == username
       location: location,
+      CreatedByUserID: CreatedByUserID,
+      IsShowProof: isShowProof,
+      Price: Number(price),
     };
 
     try {
@@ -143,9 +148,15 @@ export default CreateTaskScreen = () => {
     }
   };
 
-  useEffect(() => {
-    fetchGroupsUserIsOwnerOf();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchGroupsUserIsOwnerOf();
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+      };
+    }, []),
+  );
 
   useEffect(() => {
     fetchUsersInChosenGroup(); //every time user chooses new group, get the users of that group
@@ -158,47 +169,26 @@ export default CreateTaskScreen = () => {
           <ScrollView contentInsetAdjustmentBehavior="automatic">
             <Text></Text>
             <Text></Text>
-            <View></View>
             <Text></Text>
+
             <View>
-              <Button onPress={flipShowAddTodoItem} outlined>
-                <Text>{showAddTodoItem ? 'Done' : 'Add a todo item'}</Text>
-              </Button>
-            </View>
-            {showAddTodoItem && (
               <View>
-                <View>
-                  <PaperSelect
-                    label="Select group"
-                    value={groupsOwnerOf?.value || ''}
-                    onSelection={value => {
-                      setGroupsOwnerOf({
-                        ...groupsOwnerOf,
-                        value: value?.selectedList[0]?.value || '', // TODO nå er det feil med icon her som gjør at du ikke ser at du unselecter (må typ trykke to ganger for å selecte en group)  buggen, annahver gang får jeg empty group
-                        selectedList: value?.selectedList || [],
-                        error: '',
-                      });
-                    }}
-                    arrayList={groupsOwnerOf?.list || []}
-                    selectedArrayList={groupsOwnerOf?.selectedList || []}
-                    errorText={''}
-                    multiEnable={false}
-                  />
-                  <TextInput
-                    id="taskName"
-                    label="Task name"
-                    value={taskName}
-                    onChangeText={text => setTaskName(text)}
-                  />
-                </View>
-                <View>
-                  <TextInput
-                    id="location"
-                    label="Task location"
-                    value={location}
-                    onChangeText={text => setLocation(text)}
-                  />
-                </View>
+                <PaperSelect
+                  label="Select group"
+                  value={groupsOwnerOf?.value || ''}
+                  onSelection={value => {
+                    setGroupsOwnerOf({
+                      ...groupsOwnerOf,
+                      value: value?.selectedList[0]?.value || '', // TODO nå er det feil med icon her som gjør at du ikke ser at du unselecter (må typ trykke to ganger for å selecte en group)  buggen, annahver gang får jeg empty group
+                      selectedList: value?.selectedList || [],
+                      error: '',
+                    });
+                  }}
+                  arrayList={groupsOwnerOf?.list || []}
+                  selectedArrayList={groupsOwnerOf?.selectedList || []}
+                  errorText={''}
+                  multiEnable={false}
+                />
                 <View>
                   <PaperSelect
                     label="Select assignee"
@@ -217,17 +207,67 @@ export default CreateTaskScreen = () => {
                     multiEnable={false}
                   />
                 </View>
-                <View>
-                  <Button
-                    onPress={() => {
-                      createTask();
-                    }}
-                    outlined>
-                    Create task
-                  </Button>
+                <TextInput
+                  id="taskName"
+                  label="Task name"
+                  value={taskName}
+                  onChangeText={text => setTaskName(text)}
+                />
+              </View>
+
+              <View>
+                <TextInput
+                  id="location"
+                  label="Task location"
+                  value={location}
+                  onChangeText={text => setLocation(text)}
+                />
+              </View>
+              <View>
+                <TextInput
+                  id="price"
+                  label="Task price in kr"
+                  keyboardType="numeric"
+                  value={price}
+                  onChangeText={price => setPrice(price)}
+                  maxLength={4}
+                />
+              </View>
+
+              <View style={styles.parent}>
+                <View style={styles.bigChild}>
+                  <Text style={styles.requireProofText}>
+                    Require proof to complete taks
+                  </Text>
+                </View>
+
+                <View style={styles.smallChild}>
+                  <Switch
+                    value={isShowProof}
+                    onValueChange={toggleIsShowProof}
+                    disabled={false}
+                    activeText={'Yes'}
+                    inActiveText={'No'}
+                    backgroundActive={'green'}
+                    backgroundInactive={'gray'}
+                    circleActiveColor={'#30a566'}
+                    circleInActiveColor={'#000000'}
+                  />
                 </View>
               </View>
-            )}
+              <Text></Text>
+              <Text></Text>
+              <Text></Text>
+              <View>
+                <Button
+                  onPress={() => {
+                    createTask();
+                  }}
+                  outlined>
+                  Create task
+                </Button>
+              </View>
+            </View>
 
             <Text></Text>
             <Text></Text>
@@ -239,3 +279,25 @@ export default CreateTaskScreen = () => {
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  IsShowProofParent: {},
+  parent: {
+    flex: 1,
+    flexDirection: 'row',
+    borderColor: '#000000',
+    borderWidth: 2,
+    outlineColor: 'black',
+    outlineStyle: 'solid',
+    paddingVertical: 5,
+  },
+  smallChild: {
+    flexBasis: '30%',
+    width: '30%',
+  },
+  bigChild: {flexBasis: '70%', width: '70%'},
+  requireProofText: {
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+});
