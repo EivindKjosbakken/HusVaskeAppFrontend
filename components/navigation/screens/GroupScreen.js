@@ -8,12 +8,12 @@ import {
   Provider,
   Snackbar,
 } from 'react-native-paper';
-import api from '../../api/posts';
-import SInfo from 'react-native-sensitive-info';
+
 import CreateGroupForm from '../../forms/CreateGroupForm';
 import AddUserToGroupForm from '../../forms/AddUserToGroupForm';
 import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 export default GroupScreen = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
@@ -78,14 +78,16 @@ export default GroupScreen = () => {
             <Button
               style={{marginTop: 30}}
               onPress={() => setShowCreateGroup(true)}>
-              Create a group!
+              Create a group!{' '}
+              <Icon name={'user'} size={30} color={'green'}></Icon>
             </Button>
             <Text></Text>
             <Text></Text>
             <Button
               style={{marginTop: 30}}
               onPress={() => setShowAddUserToGroup(true)}>
-              Add user to a group!
+              Add user to a group!{' '}
+              <Icon name={'user-plus'} size={30} color={'green'}></Icon>
             </Button>
             <Text></Text>
             <Text></Text>

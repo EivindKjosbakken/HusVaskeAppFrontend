@@ -8,7 +8,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
 import {Switch} from 'react-native-switch';
-import {style} from 'styled-system';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 export default CreateTaskScreen = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);

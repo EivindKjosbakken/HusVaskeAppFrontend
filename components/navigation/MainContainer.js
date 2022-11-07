@@ -3,7 +3,7 @@ import {useEffect, useState, useContext} from 'react';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
 
 import {View, Text, StyleSheet} from 'react-native';
 import SInfo from 'react-native-sensitive-info';
@@ -41,19 +41,24 @@ function MainContainer() {
             {
             }
             if (rn === Administrative) {
-              iconName = focused ? 'home-outline' : 'home-outline';
+              iconName = 'home';
+              color = focused ? 'green' : 'grey';
             } else if (rn === ShowTasks) {
-              iconName = focused ? 'earth' : 'earth';
+              iconName = 'tasks';
+              color = focused ? 'green' : 'grey';
             } else if (rn === FinishedTasks) {
-              iconName = focused ? 'earth-outline' : 'earth-outline';
+              iconName = 'check-square';
+              color = focused ? 'green' : 'grey';
             } else if (rn === CreateTask) {
-              iconName = focused ? 'add-circle' : 'add-circle-outline';
+              iconName = 'plus-square';
+              color = focused ? 'green' : 'grey';
             } else if (rn === Group) {
-              iconName = focused ? 'md-sync-outline' : 'md-sync-sharp';
+              iconName = 'group';
+              color = focused ? 'green' : 'grey';
             }
 
             // You can return any component that you like here!
-            return <Ionicons name={iconName} size={30} />;
+            return <Icon name={iconName} size={35} color={color} />;
           },
         })}>
         {userState.isLoggedIn ? (
