@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
 import {
   TextInput,
@@ -14,6 +14,7 @@ import AddUserToGroupForm from '../../forms/AddUserToGroupForm';
 import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {useFocusEffect} from '@react-navigation/native';
 
 export default GroupScreen = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
@@ -25,6 +26,15 @@ export default GroupScreen = () => {
   const [showAddUserToGroup, setShowAddUserToGroup] = useState(false);
 
   const hideAddUserToGroupModal = () => setShowAddUserToGroup(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        setShowCreateGroup(false);
+        setShowAddUserToGroup(false);
+      };
+    }, []),
+  );
 
   if (showCreateGroup) {
     // show the modal of making a group
@@ -38,7 +48,8 @@ export default GroupScreen = () => {
             <Text style={{textAlign: 'center'}}>
               Click anywhere else to dismiss
             </Text>
-            <CreateGroupForm></CreateGroupForm>
+            <CreateGroupForm
+              hideCreateGroupModal={hideCreateGroupModal}></CreateGroupForm>
           </Modal>
         </Portal>
       </Provider>
@@ -56,7 +67,10 @@ export default GroupScreen = () => {
             <Text style={{textAlign: 'center'}}>
               Click anywhere else to dismiss
             </Text>
-            <AddUserToGroupForm></AddUserToGroupForm>
+            <AddUserToGroupForm
+              hideAddUserToGroupModal={
+                hideAddUserToGroupModal
+              }></AddUserToGroupForm>
           </Modal>
         </Portal>
       </Provider>
@@ -93,8 +107,8 @@ export default GroupScreen = () => {
             <Text></Text>
           </View>
         </ScrollView>
-        <SnackbarComponent></SnackbarComponent>
       </SafeAreaView>
+      <SnackbarComponent></SnackbarComponent>
     </>
   );
 };

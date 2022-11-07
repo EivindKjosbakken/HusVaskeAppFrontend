@@ -9,6 +9,7 @@ import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
 import {Switch} from 'react-native-switch';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {Dropdown} from 'react-native-element-dropdown';
 
 export default CreateTaskScreen = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
@@ -18,23 +19,15 @@ export default CreateTaskScreen = () => {
   const [isShowProof, setIsShowProof] = useState(false);
   const [price, setPrice] = useState('0');
 
+  const [groupsOwnerOf, setGroupsOwnerOf] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+
+  const [usersInGroup, setUsersInGroup] = useState([]);
+  const [selectedAssignee, setSelectedAssignee] = useState(null);
+
   const toggleIsShowProof = () => {
     setIsShowProof(!isShowProof);
   };
-
-  const [groupsOwnerOf, setGroupsOwnerOf] = useState({
-    value: '',
-    list: [],
-    selectedList: [],
-    error: '',
-  });
-
-  const [usersInGroup, setUsersInGroup] = useState({
-    value: '',
-    list: [],
-    selectedList: [],
-    error: '',
-  });
 
   const fetchGroupsUserIsOwnerOf = async () => {
     const currUserID = await SInfo.getItem('userid', {});
@@ -50,39 +43,33 @@ export default CreateTaskScreen = () => {
         textColor: 'red',
       });
     }
+
     try {
       const response = await api.get('/api/groupsownerof/' + currUserID); //get the groups the user is owner of
+      if (response.data.length === 0) {
+        setSnackbarState({
+          active: true,
+          text: 'You are not owner of any groups, and can therefore not create a task',
+          textColor: 'orange',
+        });
+      }
 
       response.data.map(obj => {
         //TODO bad solution, had to change name of key to get the PaperSelect to work (only accepted key "value" for some reason)
-        obj['value'] = obj['groupName'];
+        obj['label'] = obj['groupName'];
         delete obj['groupName'];
       });
 
-      await setGroupsOwnerOf({
-        value: '',
-        list: response.data || [{value: 'You own no groups'}],
-        selectedList: [],
-        error: '',
-      });
+      await setGroupsOwnerOf(response.data || [{value: 'You own no groups'}]);
     } catch (err) {
       console.log('GOT ERROR WHEN FETCHING TASKS ' + err);
     }
   };
 
   const fetchUsersInChosenGroup = async () => {
-    if (groupsOwnerOf?.selectedList.length === 0) {
-      return;
-    }
-    const groupid =
-      (await groupsOwnerOf?.selectedList[0]['groupID']) || undefined;
+    const groupid = (await selectedGroup?.groupID) || undefined;
 
     if (groupid === undefined) {
-      setSnackbarState({
-        active: true,
-        text: 'Users of group not found',
-        textColor: 'red',
-      });
       return;
     }
 
@@ -91,27 +78,18 @@ export default CreateTaskScreen = () => {
       response.data.map(obj => {
         //TODO dette er shitty løsning, fiks det! Bug er fordi paper select funker tydeligvis bare med col "value" (fant ikke noen løsning på det)
         //TODO bad solution, had to change name of key to get the PaperSelect to work (only accepted key "value" for some reason)
-        obj['value'] = obj['username'];
+        obj['label'] = obj['username'];
         delete obj['username'];
       });
-      await setUsersInGroup({
-        value: '',
-        list: response?.data || [{value: 'You own no groups'}],
-        selectedList: [],
-        error: '',
-      });
+      await setUsersInGroup(response.data || [{value: 'You own no groups'}]);
     } catch (err) {
       console.log('Fetch users in chosen group faila ' + err);
     }
   };
 
   const createTask = async () => {
-    const groupid =
-      (await groupsOwnerOf?.selectedList[0]['groupID']) || undefined;
-
-    const CreatedByUserID =
-      (await groupsOwnerOf?.selectedList[0]['userID']) || undefined;
-
+    const groupid = selectedGroup.groupID || undefined;
+    const CreatedByUserID = await SInfo.getItem('userid', {});
     if (groupid === undefined) {
       setSnackbarState({
         active: true,
@@ -121,19 +99,24 @@ export default CreateTaskScreen = () => {
       return;
     }
 
-    body = {
+    const body = {
       title: taskName,
-      AssigneeUserID: usersInGroup?.selectedList[0]['id'],
+      AssigneeUserID: selectedAssignee?.id,
       groupID: groupid,
-      assignee: usersInGroup?.selectedList[0]['value'], // == username
+      assignee: selectedAssignee?.label, // == username
       location: location,
       CreatedByUserID: CreatedByUserID,
       IsShowProof: isShowProof,
       Price: Number(price),
     };
-
     try {
-      if (body.title != '' && body.location != '' && body.assignee != '') {
+      if (
+        body.title != '' &&
+        body.location != '' &&
+        body.assignee != '' &&
+        body.AssigneeUserID !== undefined &&
+        body.groupID !== undefined
+      ) {
         const response = await api.post('/api/todoitem', body);
         setSnackbarState({
           text: 'Task "' + taskName + '" added',
@@ -142,6 +125,11 @@ export default CreateTaskScreen = () => {
         });
       } else {
         console.log('BODY WAS EMPTY');
+        setSnackbarState({
+          text: 'Have to fill in all fields',
+          active: true,
+          textColor: 'orange',
+        });
       }
     } catch (err) {
       console.log('ERROR WHEN POSTING A TASK: ' + err);
@@ -160,7 +148,7 @@ export default CreateTaskScreen = () => {
 
   useEffect(() => {
     fetchUsersInChosenGroup(); //every time user chooses new group, get the users of that group
-  }, [groupsOwnerOf]);
+  }, [selectedGroup]);
 
   return (
     <>
@@ -170,43 +158,53 @@ export default CreateTaskScreen = () => {
             <Text></Text>
             <Text></Text>
             <Text></Text>
+            <Dropdown
+              style={styles.dropdown}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              iconStyle={styles.iconStyle}
+              data={groupsOwnerOf}
+              search
+              maxHeight={300}
+              labelField="label"
+              valueField="value"
+              placeholder="Select group"
+              searchPlaceholder="Search..."
+              value={selectedGroup?.label || ''}
+              onChange={item => {
+                setSelectedGroup(item);
+              }}
+              renderLeftIcon={() => (
+                <Icon color="black" name="group" size={20} />
+              )}
+            />
 
             <View>
               <View>
-                <PaperSelect
-                  label="Select group"
-                  value={groupsOwnerOf?.value || ''}
-                  onSelection={value => {
-                    setGroupsOwnerOf({
-                      ...groupsOwnerOf,
-                      value: value?.selectedList[0]?.value || '', // TODO nå er det feil med icon her som gjør at du ikke ser at du unselecter (må typ trykke to ganger for å selecte en group)  buggen, annahver gang får jeg empty group
-                      selectedList: value?.selectedList || [],
-                      error: '',
-                    });
+                <Dropdown
+                  style={styles.dropdown}
+                  placeholderStyle={styles.placeholderStyle}
+                  selectedTextStyle={styles.selectedTextStyle}
+                  inputSearchStyle={styles.inputSearchStyle}
+                  iconStyle={styles.iconStyle}
+                  data={usersInGroup}
+                  search
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder="Select assignee"
+                  searchPlaceholder="Search..."
+                  value={selectedAssignee?.label || ''}
+                  onChange={item => {
+                    setSelectedAssignee(item);
                   }}
-                  arrayList={groupsOwnerOf?.list || []}
-                  selectedArrayList={groupsOwnerOf?.selectedList || []}
-                  errorText={''}
-                  multiEnable={false}
+                  renderLeftIcon={() => (
+                    <Icon color="black" name="user" size={20} />
+                  )}
                 />
-                <View>
-                  <PaperSelect
-                    label="Select assignee"
-                    value={usersInGroup?.value || ''}
-                    onSelection={value => {
-                      setUsersInGroup({
-                        ...usersInGroup,
-                        value: value?.selectedList[0]?.value || '', // TODO nå er det feil med icon her som gjør at du ikke ser at du unselecter (må typ trykke to ganger for å selecte en group)  buggen, annahver gang får jeg empty group
-                        selectedList: value?.selectedList || [],
-                        error: '',
-                      });
-                    }}
-                    arrayList={usersInGroup?.list || []}
-                    selectedArrayList={usersInGroup?.selectedList || []}
-                    errorText={''}
-                    multiEnable={false}
-                  />
-                </View>
+
+                <View></View>
                 <TextInput
                   id="taskName"
                   label="Task name"
@@ -237,7 +235,7 @@ export default CreateTaskScreen = () => {
               <View style={styles.parent}>
                 <View style={styles.bigChild}>
                   <Text style={styles.requireProofText}>
-                    Require proof to complete taks
+                    Require proof to complete task
                   </Text>
                 </View>
 
@@ -273,9 +271,9 @@ export default CreateTaskScreen = () => {
             <Text></Text>
             <Text></Text>
           </ScrollView>
-          <SnackbarComponent></SnackbarComponent>
         </SafeAreaView>
       </Provider>
+      <SnackbarComponent></SnackbarComponent>
     </>
   );
 };
@@ -294,10 +292,34 @@ const styles = StyleSheet.create({
   smallChild: {
     flexBasis: '30%',
     width: '30%',
+    justifyContent: 'center',
   },
   bigChild: {flexBasis: '70%', width: '70%'},
   requireProofText: {
     fontWeight: 'bold',
+    fontSize: 16,
+  },
+  dropdown: {
+    margin: 16,
+    height: 50,
+    borderBottomColor: 'gray',
+    borderBottomWidth: 0.5,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
     fontSize: 16,
   },
 });

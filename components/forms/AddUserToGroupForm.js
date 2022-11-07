@@ -1,28 +1,34 @@
-import React, {useEffect, useState, useContext} from 'react';
-import {View} from 'react-native';
-import {TextInput, Button, Modal, Portal, Provider} from 'react-native-paper';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
+import {View, StyleSheet, Text, SafeAreaView} from 'react-native';
+import {TextInput, Button} from 'react-native-paper';
 import api from '../api/posts';
 import {PaperSelect} from 'react-native-paper-select';
 import SInfo from 'react-native-sensitive-info';
 import SnackbarComponent from '../SnackbarComponent';
 import AppContext from '../AppContext';
+import {Switch} from 'react-native-switch';
+import {useFocusEffect} from '@react-navigation/native';
+import {Dropdown} from 'react-native-element-dropdown';
+import Icon from 'react-native-vector-icons/dist/FontAwesome';
+import {onChange} from 'react-native-reanimated';
 
-export default AddUserToGroupForm = () => {
+export default AddUserToGroupForm = ({hideAddUserToGroupModal}) => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
 
   const [userEmail, setUserEmail] = useState('');
   const [userRole, setUserRole] = useState('');
 
-  const [groupsOwnerOf, setGroupsOwnerOf] = useState({
-    value: '',
-    list: [],
-    selectedList: [],
-    error: '',
-  });
+  const [groupsOwnerOf, setGroupsOwnerOf] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  const toggleIsAdmin = () => {
+    setIsAdmin(!isAdmin);
+  };
 
   const addUserToGroup = async () => {
-    const groupid =
-      (await groupsOwnerOf?.selectedList[0]['groupID']) || undefined;
+    const groupid = (await selectedGroup?.groupID) || undefined;
     if (groupid === undefined) {
       setSnackbarState({
         active: true,
@@ -31,14 +37,16 @@ export default AddUserToGroupForm = () => {
       });
       return;
     }
-    body = {
+    const body = {
       UserEmail: userEmail,
       GroupID: groupid,
       Role: userRole,
+      IsAdmin: isAdmin,
     };
 
     try {
       const response = await api.post('api/addusertogroup', body);
+      console.log('IS NOW . ' + selectedGroup);
       setSnackbarState({
         active: true,
         text:
@@ -47,7 +55,7 @@ export default AddUserToGroupForm = () => {
           ' WAS ADDED WITH ROLE: ' +
           userRole +
           ' TO GROUP: ' +
-          groupsOwnerOf?.selectedList[0]['value'],
+          selectedGroup?.label,
         textColor: 'green',
       });
     } catch (err) {
@@ -60,7 +68,7 @@ export default AddUserToGroupForm = () => {
     }
   };
 
-  const fetchGroupsUserIsOwnerOf = async () => {
+  const fetchGroupsUserIsOwnerOrAdminOf = async () => {
     const currUserID = await SInfo.getItem('userid', {});
     const currUsername = await SInfo.getItem('username', {});
     if (
@@ -77,48 +85,55 @@ export default AddUserToGroupForm = () => {
     try {
       const response = await api.get('/api/groupsownerof/' + currUserID); //get the groups the user is owner of
 
+      if (response.data.length === 0) {
+        setSnackbarState({
+          active: true,
+          text: 'You are not owner of any groups, and can therefore not add people to group',
+          textColor: 'orange',
+        });
+      }
       response.data.map(obj => {
         //TODO bad solution, had to change name of key to get the PaperSelect to work (only accepted key "value" for some reason)
-        obj['value'] = obj['groupName'];
+        obj['label'] = obj['groupName'];
         delete obj['groupName'];
       });
-
-      await setGroupsOwnerOf({
-        value: '',
-        list: response.data || [{value: 'You own no groups'}],
-        selectedList: [],
-        error: '',
-      });
+      await setGroupsOwnerOf(response.data || [{value: 'You own no groups'}]);
     } catch (err) {
       console.log('GOT ERROR WHEN FETCHING TASKS ' + err);
     }
   };
 
-  useEffect(() => {
-    fetchGroupsUserIsOwnerOf();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      fetchGroupsUserIsOwnerOrAdminOf();
+      return () => {};
+    }, []),
+  );
 
   return (
     <>
-      <View>
-        <View>
-          <PaperSelect
-            label="Select group"
-            value={groupsOwnerOf?.value || ''}
-            onSelection={value => {
-              setGroupsOwnerOf({
-                ...groupsOwnerOf,
-                value: value?.selectedList[0]?.value || '', // TODO nå er det feil med icon her som gjør at du ikke ser at du unselecter (må typ trykke to ganger for å selecte en group)  buggen, annahver gang får jeg empty group
-                selectedList: value?.selectedList || [],
-                error: '',
-              });
-            }}
-            arrayList={groupsOwnerOf?.list || []}
-            selectedArrayList={groupsOwnerOf?.selectedList || []}
-            errorText={''}
-            multiEnable={false}
-          />
-        </View>
+      <SafeAreaView>
+        <View></View>
+        <Text></Text>
+        <Dropdown
+          style={styles.dropdown}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          data={groupsOwnerOf}
+          search
+          maxHeight={400}
+          labelField="label"
+          valueField="value"
+          placeholder="Select group"
+          searchPlaceholder="Search..."
+          value={selectedGroup?.label || ''}
+          onChange={item => {
+            setSelectedGroup(item);
+          }}
+          renderLeftIcon={() => <Icon color="black" name="group" size={20} />}
+        />
         <View>
           <TextInput
             id="email"
@@ -135,17 +150,88 @@ export default AddUserToGroupForm = () => {
             onChangeText={text => setUserRole(text)}
           />
         </View>
+        <View style={styles.parent}>
+          <View style={styles.bigChild}>
+            <Text style={styles.requireProofText}>
+              Have user be admin in group
+            </Text>
+          </View>
+          <View style={styles.smallChild}>
+            <Switch
+              value={isAdmin}
+              onValueChange={toggleIsAdmin}
+              disabled={false}
+              activeText={'Yes'}
+              inActiveText={'No'}
+              backgroundActive={'green'}
+              backgroundInactive={'gray'}
+              circleActiveColor={'#30a566'}
+              circleInActiveColor={'#000000'}
+            />
+          </View>
+        </View>
+        <Text></Text>
+        <Text></Text>
         <View>
           <Button
             onPress={() => {
               addUserToGroup();
+              hideAddUserToGroupModal();
             }}
             outlined>
             Add user to group
           </Button>
         </View>
-        <SnackbarComponent></SnackbarComponent>
-      </View>
+      </SafeAreaView>
+      <SnackbarComponent></SnackbarComponent>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  parent: {
+    flexDirection: 'row',
+    borderColor: '#000000',
+    borderWidth: 2,
+    outlineColor: 'black',
+    outlineStyle: 'solid',
+    paddingVertical: 25,
+    height: '25%',
+  },
+  smallChild: {
+    flexBasis: '30%',
+    width: '30%',
+    justifyContent: 'center',
+  },
+  bigChild: {flexBasis: '70%', width: '70%'},
+  requireProofText: {
+    fontWeight: 'bold',
+    fontSize: 14,
+    justifyContent: 'center',
+    position: 'relative',
+    top: '15%',
+  },
+  dropdown: {
+    margin: 16,
+    height: 50,
+    borderBottomColor: 'gray',
+    borderBottomWidth: 0.5,
+  },
+  icon: {
+    marginRight: 5,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+});

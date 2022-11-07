@@ -7,7 +7,7 @@ import SInfo from 'react-native-sensitive-info';
 import SnackbarComponent from '../SnackbarComponent';
 import AppContext from '../AppContext';
 
-export default CreateGroupForm = () => {
+export default CreateGroupForm = ({hideCreateGroupModal}) => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
 
   const [groupName, setGroupName] = useState('');
@@ -24,7 +24,7 @@ export default CreateGroupForm = () => {
       });
       return;
     }
-    body = {UserID: userID, GroupName: groupName, Role: role};
+    const body = {UserID: userID, GroupName: groupName, Role: role};
     try {
       const response = await api.post('api/creategroup', body);
 
@@ -66,6 +66,7 @@ export default CreateGroupForm = () => {
           <Button
             onPress={() => {
               createGroup(groupName, role);
+              hideCreateGroupModal();
             }}
             outlined>
             Create group

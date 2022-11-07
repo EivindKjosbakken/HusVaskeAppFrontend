@@ -62,7 +62,11 @@ export default AdministrativeScreen = () => {
         });
       }
     } catch (err) {
-      alert('error when logging in');
+      setSnackbarState({
+        active: true,
+        text: 'Must enter correct username and password',
+        textColor: 'red',
+      });
       console.log('ERROR WHEN LOGGIN IN ' + err);
     }
   };
