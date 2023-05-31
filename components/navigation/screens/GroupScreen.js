@@ -79,34 +79,29 @@ export default GroupScreen = () => {
   return (
     <>
       <SafeAreaView>
-        <ScrollView contentInsetAdjustmentBehavior="automatic">
-          <Text></Text>
+        <View style={{backgroundColor: '#5F9EA0', height: '100%'}}>
+          <ScrollView contentInsetAdjustmentBehavior="automatic">
+            <Text></Text>
 
-          <Text></Text>
+            <Text></Text>
 
-          <View>
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
-            <Button
-              style={{marginTop: 30}}
-              onPress={() => setShowCreateGroup(true)}>
-              Create a group!{' '}
-              <Icon name={'user'} size={30} color={'green'}></Icon>
-            </Button>
-            <Text></Text>
-            <Text></Text>
-            <Button
-              style={{marginTop: 30}}
-              onPress={() => setShowAddUserToGroup(true)}>
-              Add user to a group!{' '}
-              <Icon name={'user-plus'} size={30} color={'green'}></Icon>
-            </Button>
-            <Text></Text>
-            <Text></Text>
-          </View>
-        </ScrollView>
+            <View>
+              <Button
+                style={{marginTop: 30}}
+                onPress={() => setShowCreateGroup(true)}>
+                Create a group!{' '}
+                <Icon name={'user'} size={30} color={'green'}></Icon>
+              </Button>
+
+              <Button
+                style={{marginTop: 30}}
+                onPress={() => setShowAddUserToGroup(true)}>
+                Add user to a group!{' '}
+                <Icon name={'user-plus'} size={30} color={'green'}></Icon>
+              </Button>
+            </View>
+          </ScrollView>
+        </View>
       </SafeAreaView>
       <SnackbarComponent></SnackbarComponent>
     </>

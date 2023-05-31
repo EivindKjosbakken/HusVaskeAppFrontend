@@ -10,6 +10,7 @@ import AppContext from '../../AppContext';
 import {Switch} from 'react-native-switch';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {Dropdown} from 'react-native-element-dropdown';
+import ThemedButton from 'react-native-really-awesome-button';
 
 export default CreateTaskScreen = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
@@ -155,121 +156,133 @@ export default CreateTaskScreen = () => {
       <Provider>
         <SafeAreaView>
           <ScrollView contentInsetAdjustmentBehavior="automatic">
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
-            <Dropdown
-              style={styles.dropdown}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              iconStyle={styles.iconStyle}
-              data={groupsOwnerOf}
-              search
-              maxHeight={300}
-              labelField="label"
-              valueField="value"
-              placeholder="Select group"
-              searchPlaceholder="Search..."
-              value={selectedGroup?.label || ''}
-              onChange={item => {
-                setSelectedGroup(item);
-              }}
-              renderLeftIcon={() => (
-                <Icon color="black" name="group" size={20} />
-              )}
-            />
-
-            <View>
-              <View>
-                <Dropdown
-                  style={styles.dropdown}
-                  placeholderStyle={styles.placeholderStyle}
-                  selectedTextStyle={styles.selectedTextStyle}
-                  inputSearchStyle={styles.inputSearchStyle}
-                  iconStyle={styles.iconStyle}
-                  data={usersInGroup}
-                  search
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder="Select assignee"
-                  searchPlaceholder="Search..."
-                  value={selectedAssignee?.label || ''}
-                  onChange={item => {
-                    setSelectedAssignee(item);
-                  }}
-                  renderLeftIcon={() => (
-                    <Icon color="black" name="user" size={20} />
-                  )}
-                />
-
-                <View></View>
-                <TextInput
-                  id="taskName"
-                  label="Task name"
-                  value={taskName}
-                  onChangeText={text => setTaskName(text)}
-                />
-              </View>
+            <View style={{backgroundColor: '#5F9EA0', height: '100%'}}>
+              <Dropdown
+                style={styles.dropdown}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                inputSearchStyle={styles.inputSearchStyle}
+                iconStyle={styles.iconStyle}
+                data={groupsOwnerOf}
+                search
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder="Select group"
+                searchPlaceholder="Search..."
+                value={selectedGroup?.label || ''}
+                onChange={item => {
+                  setSelectedGroup(item);
+                }}
+                renderLeftIcon={() => (
+                  <Icon color="black" name="group" size={20} />
+                )}
+              />
 
               <View>
-                <TextInput
-                  id="location"
-                  label="Task location"
-                  value={location}
-                  onChangeText={text => setLocation(text)}
-                />
-              </View>
-              <View>
-                <TextInput
-                  id="price"
-                  label="Task price in kr"
-                  keyboardType="numeric"
-                  value={price}
-                  onChangeText={price => setPrice(price)}
-                  maxLength={4}
-                />
-              </View>
+                <View>
+                  <Dropdown
+                    style={styles.dropdown}
+                    placeholderStyle={styles.placeholderStyle}
+                    selectedTextStyle={styles.selectedTextStyle}
+                    inputSearchStyle={styles.inputSearchStyle}
+                    iconStyle={styles.iconStyle}
+                    data={usersInGroup}
+                    search
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder="Select assignee"
+                    searchPlaceholder="Search..."
+                    value={selectedAssignee?.label || ''}
+                    onChange={item => {
+                      setSelectedAssignee(item);
+                    }}
+                    renderLeftIcon={() => (
+                      <Icon color="black" name="user" size={20} />
+                    )}
+                  />
 
-              <View style={styles.parent}>
-                <View style={styles.bigChild}>
-                  <Text style={styles.requireProofText}>
-                    Require proof to complete task
-                  </Text>
-                </View>
-
-                <View style={styles.smallChild}>
-                  <Switch
-                    value={isShowProof}
-                    onValueChange={toggleIsShowProof}
-                    disabled={false}
-                    activeText={'Yes'}
-                    inActiveText={'No'}
-                    backgroundActive={'green'}
-                    backgroundInactive={'gray'}
-                    circleActiveColor={'#30a566'}
-                    circleInActiveColor={'#000000'}
+                  <View></View>
+                  <TextInput
+                    id="taskName"
+                    label="Task name"
+                    value={taskName}
+                    onChangeText={text => setTaskName(text)}
+                    style={styles.input}
                   />
                 </View>
-              </View>
-              <Text></Text>
-              <Text></Text>
-              <Text></Text>
-              <View>
-                <Button
-                  onPress={() => {
-                    createTask();
-                  }}
-                  outlined>
-                  Create task
-                </Button>
-              </View>
-            </View>
 
-            <Text></Text>
-            <Text></Text>
-            <Text></Text>
+                <View>
+                  <TextInput
+                    id="location"
+                    label="Task location"
+                    value={location}
+                    onChangeText={text => setLocation(text)}
+                    style={styles.input}
+                  />
+                </View>
+                <View>
+                  <TextInput
+                    id="price"
+                    label="Task price in kr"
+                    keyboardType="numeric"
+                    value={price}
+                    onChangeText={price => setPrice(price)}
+                    style={styles.input}
+                    maxLength={4}
+                  />
+                </View>
+
+                <View style={styles.parent}>
+                  <View style={styles.bigChild}>
+                    <Text style={styles.requireProofText}>
+                      Require proof to complete task
+                    </Text>
+                  </View>
+
+                  <View style={styles.smallChild}>
+                    <Switch
+                      value={isShowProof}
+                      onValueChange={toggleIsShowProof}
+                      disabled={false}
+                      activeText={'Yes'}
+                      inActiveText={'No'}
+                      backgroundActive={'green'}
+                      backgroundInactive={'gray'}
+                      circleActiveColor={'#30a566'}
+                      circleInActiveColor={'#000000'}
+                    />
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: '5%',
+                  }}>
+                  <ThemedButton
+                    name="cartman"
+                    type="primary"
+                    backgroundColor="green"
+                    width={150}
+                    borderRadius={30}
+                    borderWidth={1}
+                    borderColor="#f7dd58"
+                    onPress={() => {
+                      createTask();
+                      console.log('creating');
+                    }}>
+                    Create task
+                  </ThemedButton>
+                </View>
+              </View>
+
+              <Text></Text>
+              <Text></Text>
+              <Text></Text>
+            </View>
           </ScrollView>
         </SafeAreaView>
       </Provider>
@@ -297,7 +310,9 @@ const styles = StyleSheet.create({
   bigChild: {flexBasis: '70%', width: '70%'},
   requireProofText: {
     fontWeight: 'bold',
-    fontSize: 16,
+    fontSize: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   dropdown: {
     margin: 16,
@@ -321,5 +336,14 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  container: {
+    paddingTop: 23,
+  },
+  input: {
+    margin: 15,
+    height: 50,
+    borderColor: '#7a42f4',
+    borderWidth: 1,
   },
 });

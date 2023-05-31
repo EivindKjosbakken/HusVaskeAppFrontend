@@ -114,51 +114,54 @@ export default FinishedTasksScreen = () => {
   return (
     <>
       <Provider>
-        <Button onPress={flipShowTasks}>
-          <Text style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
-            Your finished tasks - click to
-            {showTasks ? <Text> hide</Text> : <Text> show</Text>}
-          </Text>
-        </Button>
-        {typeof myTodoItems !== 'undefined' &&
-        showTasks &&
-        myTodoItems.length > 0 ? (
-          <View style={styles.container}>
-            <FlatList
-              data={Object.keys(myTodoItems)}
-              renderItem={({item}) => (
-                <TaskBoxFinished
-                  taskID={myTodoItems[item].id}
-                  taskName={myTodoItems[item].title}
-                  assignee={myTodoItems[item].assignee}
-                  refreshTasks={refreshTasks}
-                  provideDetails={provideDetails}
-                />
-              )}
-            />
-          </View>
-        ) : (
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 20,
-              fontWeight: 'bold',
-              top: '10%',
-            }}>
-            You have no finished TODO items
-          </Text>
-        )}
-        <DetailedTaskView
-          isVisible={isVisible}
-          taskName={taskName}
-          assignee={assignee}
-          location={location}
-          groupName={groupName}
-          timeCreated={timeCreated}
-          timeFinished={timeFinished}
-          isShowProof={isShowProof}
-          price={price}
-          setIsVisible={setIsVisible}></DetailedTaskView>
+        <View style={{backgroundColor: '#5F9EA0', height: '100%'}}>
+          <Button onPress={flipShowTasks}>
+            <Text
+              style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
+              Your finished tasks - click to
+              {showTasks ? <Text> hide</Text> : <Text> show</Text>}
+            </Text>
+          </Button>
+          {typeof myTodoItems !== 'undefined' &&
+          showTasks &&
+          myTodoItems.length > 0 ? (
+            <View style={styles.container}>
+              <FlatList
+                data={Object.keys(myTodoItems)}
+                renderItem={({item}) => (
+                  <TaskBoxFinished
+                    taskID={myTodoItems[item].id}
+                    taskName={myTodoItems[item].title}
+                    assignee={myTodoItems[item].assignee}
+                    refreshTasks={refreshTasks}
+                    provideDetails={provideDetails}
+                  />
+                )}
+              />
+            </View>
+          ) : (
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 20,
+                fontWeight: 'bold',
+                top: '10%',
+              }}>
+              You have no finished TODO items
+            </Text>
+          )}
+          <DetailedTaskView
+            isVisible={isVisible}
+            taskName={taskName}
+            assignee={assignee}
+            location={location}
+            groupName={groupName}
+            timeCreated={timeCreated}
+            timeFinished={timeFinished}
+            isShowProof={isShowProof}
+            price={price}
+            setIsVisible={setIsVisible}></DetailedTaskView>
+        </View>
       </Provider>
     </>
   );

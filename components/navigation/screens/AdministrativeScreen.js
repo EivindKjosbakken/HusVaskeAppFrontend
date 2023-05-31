@@ -13,6 +13,8 @@ import api from '../../api/posts';
 import SInfo from 'react-native-sensitive-info';
 import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
+import {Avatar} from 'react-native-elements';
+import ThemedButton from 'react-native-really-awesome-button';
 
 export default AdministrativeScreen = () => {
   const {snackbarState, setSnackbarState, setUserState} =
@@ -111,104 +113,160 @@ export default AdministrativeScreen = () => {
     <>
       <SafeAreaView>
         <ScrollView contentInsetAdjustmentBehavior="automatic">
-          <Text></Text>
-
-          <Text style={{fontWeight: 'bold', textAlign: 'center', fontSize: 25}}>
-            Login:
-          </Text>
-          <View>
-            <View>
-              <TextInput
-                id="email"
-                label="Email"
-                value={loginUsername}
-                onChangeText={text => setLoginUsername(text)}
+          <View style={{backgroundColor: '#000080'}}>
+            <View style={{justifyContent: 'center', alignItems: 'center'}}>
+              <Avatar
+                rounded
+                size="xlarge"
+                icon={{name: 'user', type: 'font-awesome'}}
+                containerStyle={{flex: 2}}
               />
             </View>
-            <View>
-              <TextInput
-                id="password"
-                label="Password"
-                value={loginPassword}
-                onChangeText={text => setLoginPassword(text)}
-              />
-            </View>
-            <View>
-              <Button
-                onPress={() => {
-                  login('/api/login', {
-                    id: 0,
-                    username: loginUsername,
-                    email: loginUsername,
-                    password: loginPassword,
-                  });
-                }}
-                outlined>
-                <Text style={{color: 'green'}}>Login</Text>
-              </Button>
-            </View>
-          </View>
+            <Text></Text>
 
-          <Text></Text>
-          <Text></Text>
-          <Text></Text>
-          <Text style={{textAlign: 'center'}}>Don't have an account?</Text>
-          <Button onPress={flipShowRegister}>
-            {showRegister ? (
-              <Text>Hide register</Text>
-            ) : (
-              <Text style={{color: 'green'}}>Register</Text>
-            )}
-          </Button>
-          {showRegister && (
-            <View>
-              <View>
-                <TextInput
-                  id="username"
-                  label="Username"
-                  value={registerUsername}
-                  onChangeText={text => setRegisterUsername(text)}
-                />
-              </View>
+            <View style={styles.container}>
               <View>
                 <TextInput
                   id="email"
                   label="Email"
-                  value={registerEmail}
-                  onChangeText={text => setRegisterEmail(text)}
+                  value={loginUsername}
+                  onChangeText={text => setLoginUsername(text)}
+                  style={styles.input}
                 />
               </View>
               <View>
                 <TextInput
                   id="password"
                   label="Password"
-                  value={registerPassword}
-                  onChangeText={text => setRegisterPassword(text)}
+                  value={loginPassword}
+                  onChangeText={text => setLoginPassword(text)}
+                  style={styles.input}
                 />
               </View>
-              <View>
-                <Button
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  width: '100%',
+                  marginTop: '10%',
+                }}>
+                <ThemedButton
+                  name="rick"
+                  type="primary"
+                  backgroundColor="#30D5C8"
+                  width={150}
+                  borderRadius={30}
+                  borderWidth={1}
+                  borderColor="#f7dd58"
                   onPress={() => {
-                    register('/api/register', {
+                    login('/api/login', {
                       id: 0,
-                      username: registerUsername,
-                      email: registerEmail,
-                      password: registerPassword,
+                      username: loginUsername,
+                      email: loginUsername,
+                      password: loginPassword,
                     });
-                  }}
-                  outlined>
-                  <Text>Register</Text>
-                </Button>
+                    console.log('kjører ny knapp');
+                  }}>
+                  Login
+                </ThemedButton>
               </View>
             </View>
-          )}
-          <View>
             <Text></Text>
             <Text></Text>
             <Text></Text>
-            <Button onPress={logout}>
-              <Text style={{color: 'red'}}>Logout</Text>
-            </Button>
+
+            <View
+              style={{
+                marginTop: '10%',
+                marginBottom: '5%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                flexDirection: 'row',
+              }}>
+              <View style={{marginRight: '2%'}}>
+                <ThemedButton
+                  name="rick"
+                  type="primary"
+                  backgroundColor="#f01919"
+                  width={100}
+                  borderRadius={20}
+                  borderWidth={1}
+                  borderColor="#f7dd58"
+                  onPress={logout}>
+                  Log out
+                </ThemedButton>
+              </View>
+              <View style={{marginLeft: '2%'}}>
+                <ThemedButton
+                  name="rick"
+                  type="primary"
+                  backgroundColor="green"
+                  width={100}
+                  borderRadius={20}
+                  borderWidth={1}
+                  borderColor="#f7dd58"
+                  onPress={flipShowRegister}>
+                  Register
+                </ThemedButton>
+              </View>
+            </View>
+            {showRegister && (
+              <View style={{marginBottom: '10%'}}>
+                <View>
+                  <TextInput
+                    id="username"
+                    label="Username"
+                    value={registerUsername}
+                    onChangeText={text => setRegisterUsername(text)}
+                    style={styles.input}
+                  />
+                </View>
+                <View>
+                  <TextInput
+                    id="email"
+                    label="Email"
+                    value={registerEmail}
+                    onChangeText={text => setRegisterEmail(text)}
+                    style={styles.input}
+                  />
+                </View>
+                <View>
+                  <TextInput
+                    id="password"
+                    label="Password"
+                    value={registerPassword}
+                    onChangeText={text => setRegisterPassword(text)}
+                    style={styles.input}
+                  />
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: '5%',
+                    marginBottom: '5%',
+                  }}>
+                  <ThemedButton
+                    name="rick"
+                    type="primary"
+                    backgroundColor="green"
+                    width={125}
+                    borderRadius={20}
+                    borderWidth={1}
+                    borderColor="#f7dd58"
+                    onPress={() => {
+                      register('/api/register', {
+                        id: 0,
+                        username: registerUsername,
+                        email: registerEmail,
+                        password: registerPassword,
+                      });
+                    }}>
+                    Register user
+                  </ThemedButton>
+                </View>
+              </View>
+            )}
           </View>
         </ScrollView>
         <SnackbarComponent></SnackbarComponent>
@@ -219,4 +277,13 @@ export default AdministrativeScreen = () => {
 
 const styles = StyleSheet.create({
   containerStyle: {backgroundColor: 'white', padding: 20},
+  container: {
+    paddingTop: 23,
+  },
+  input: {
+    margin: 15,
+    height: 50,
+    borderColor: '#7a42f4',
+    borderWidth: 1,
+  },
 });
