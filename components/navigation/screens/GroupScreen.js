@@ -15,6 +15,7 @@ import SnackbarComponent from '../../SnackbarComponent';
 import AppContext from '../../AppContext';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {useFocusEffect} from '@react-navigation/native';
+import ThemedButton from 'react-native-really-awesome-button';
 
 export default GroupScreen = () => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
@@ -86,19 +87,45 @@ export default GroupScreen = () => {
             <Text></Text>
 
             <View>
-              <Button
-                style={{marginTop: 30}}
-                onPress={() => setShowCreateGroup(true)}>
-                Create a group!{' '}
-                <Icon name={'user'} size={30} color={'green'}></Icon>
-              </Button>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: '5%',
+                }}>
+                <ThemedButton
+                  name="cartman"
+                  type="primary"
+                  backgroundColor="#36FCF6"
+                  width={150}
+                  borderRadius={30}
+                  borderWidth={1}
+                  borderColor="blue"
+                  onPress={() => setShowCreateGroup(true)}>
+                  <Text>Create a group </Text>
+                  <Icon name={'user'} size={30} color={'green'}></Icon>
+                </ThemedButton>
+              </View>
 
-              <Button
-                style={{marginTop: 30}}
-                onPress={() => setShowAddUserToGroup(true)}>
-                Add user to a group!{' '}
-                <Icon name={'user-plus'} size={30} color={'green'}></Icon>
-              </Button>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: '5%',
+                }}>
+                <ThemedButton
+                  name="cartman"
+                  type="primary"
+                  backgroundColor="#36FCF6"
+                  width={180}
+                  borderRadius={30}
+                  borderWidth={1}
+                  borderColor="blue"
+                  onPress={() => setShowAddUserToGroup(true)}>
+                  <Text>Add user to a group</Text>
+                  <Icon name={'user'} size={30} color={'green'}></Icon>
+                </ThemedButton>
+              </View>
             </View>
           </ScrollView>
         </View>
@@ -109,5 +136,5 @@ export default GroupScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  containerStyle: {backgroundColor: 'white', padding: 20},
+  containerStyle: {backgroundColor: '#5F9EA0', padding: 20},
 });

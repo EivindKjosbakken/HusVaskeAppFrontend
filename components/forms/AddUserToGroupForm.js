@@ -11,6 +11,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import {Dropdown} from 'react-native-element-dropdown';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {onChange} from 'react-native-reanimated';
+import ThemedButton from 'react-native-really-awesome-button';
 
 export default AddUserToGroupForm = ({hideAddUserToGroupModal}) => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
@@ -140,6 +141,7 @@ export default AddUserToGroupForm = ({hideAddUserToGroupModal}) => {
             label="The user's email"
             value={userEmail}
             onChangeText={text => setUserEmail(text)}
+            style={styles.input}
           />
         </View>
         <View>
@@ -148,39 +150,60 @@ export default AddUserToGroupForm = ({hideAddUserToGroupModal}) => {
             label="The user's role"
             value={userRole}
             onChangeText={text => setUserRole(text)}
+            style={styles.input}
           />
         </View>
-        <View style={styles.parent}>
-          <View style={styles.bigChild}>
-            <Text style={styles.requireProofText}>
-              Have user be admin in group
-            </Text>
-          </View>
-          <View style={styles.smallChild}>
-            <Switch
-              value={isAdmin}
-              onValueChange={toggleIsAdmin}
-              disabled={false}
-              activeText={'Yes'}
-              inActiveText={'No'}
-              backgroundActive={'green'}
-              backgroundInactive={'gray'}
-              circleActiveColor={'#30a566'}
-              circleInActiveColor={'#000000'}
-            />
-          </View>
+
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '5%',
+          }}>
+          <Text style={styles.requireProofText}>
+            Have user be admin in group
+          </Text>
         </View>
-        <Text></Text>
-        <Text></Text>
-        <View>
-          <Button
+
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '5%',
+          }}>
+          <Switch
+            value={isAdmin}
+            onValueChange={toggleIsAdmin}
+            disabled={false}
+            activeText={'Yes'}
+            inActiveText={'No'}
+            backgroundActive={'green'}
+            backgroundInactive={'gray'}
+            circleActiveColor={'#30a566'}
+            circleInActiveColor={'#000000'}
+          />
+        </View>
+
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '15%',
+          }}>
+          <ThemedButton
+            name="cartman"
+            type="primary"
+            backgroundColor="green"
+            width={150}
+            borderRadius={30}
+            borderWidth={1}
+            borderColor="#f7dd58"
             onPress={() => {
               addUserToGroup();
               hideAddUserToGroupModal();
-            }}
-            outlined>
+            }}>
             Add user to group
-          </Button>
+          </ThemedButton>
         </View>
       </SafeAreaView>
       <SnackbarComponent></SnackbarComponent>
@@ -233,5 +256,15 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  containerStyle: {backgroundColor: '#5F9EA0', padding: 20},
+  container: {
+    paddingTop: 23,
+  },
+  input: {
+    margin: 15,
+    height: 50,
+    borderColor: '#7a42f4',
+    borderWidth: 1,
   },
 });

@@ -1,11 +1,12 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {View, Text, ScrollView, SafeAreaView} from 'react-native';
+import {View, Text, ScrollView, SafeAreaView, StyleSheet} from 'react-native';
 import {TextInput, Button, Modal, Portal, Provider} from 'react-native-paper';
 import {create} from 'react-test-renderer';
 import api from '../api/posts';
 import SInfo from 'react-native-sensitive-info';
 import SnackbarComponent from '../SnackbarComponent';
 import AppContext from '../AppContext';
+import ThemedButton from 'react-native-really-awesome-button';
 
 export default CreateGroupForm = ({hideCreateGroupModal}) => {
   const {snackbarState, setSnackbarState} = useContext(AppContext);
@@ -52,6 +53,7 @@ export default CreateGroupForm = ({hideCreateGroupModal}) => {
             label="Group name"
             value={groupName}
             onChangeText={text => setGroupName(text)}
+            style={styles.input}
           />
         </View>
         <View>
@@ -60,20 +62,46 @@ export default CreateGroupForm = ({hideCreateGroupModal}) => {
             label="Your role"
             value={role}
             onChangeText={text => setRole(text)}
+            style={styles.input}
           />
         </View>
-        <View>
-          <Button
+
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginTop: '5%',
+          }}>
+          <ThemedButton
+            name="cartman"
+            type="primary"
+            backgroundColor="green"
+            width={150}
+            borderRadius={30}
+            borderWidth={1}
+            borderColor="#f7dd58"
             onPress={() => {
               createGroup(groupName, role);
               hideCreateGroupModal();
-            }}
-            outlined>
+            }}>
             Create group
-          </Button>
+          </ThemedButton>
         </View>
         <SnackbarComponent></SnackbarComponent>
       </View>
     </>
   );
 };
+
+const styles = StyleSheet.create({
+  containerStyle: {backgroundColor: 'white', padding: 20},
+  container: {
+    paddingTop: 23,
+  },
+  input: {
+    margin: 15,
+    height: 50,
+    borderColor: '#7a42f4',
+    borderWidth: 1,
+  },
+});

@@ -98,29 +98,10 @@ export default UnFinishedTasksScreen = () => {
     }, []),
   );
 
-  if (!showTasks) {
-    return (
-      <>
-        <Button onPress={flipShowTasks}>
-          <Text style={{textAlign: 'center', fontSize: 15, fontWeight: 'bold'}}>
-            Your tasks - click to
-            {showTasks ? <Text> hide</Text> : <Text> show</Text>}
-          </Text>
-        </Button>
-      </>
-    );
-  }
-
   return (
     <>
       <Provider>
         <View style={{backgroundColor: '#5F9EA0', height: '100%'}}>
-          <Button onPress={flipShowTasks}>
-            <Text
-              style={{textAlign: 'center', fontSize: 20, fontWeight: 'bold'}}>
-              Your tasks
-            </Text>
-          </Button>
           {typeof myTodoItems !== 'undefined' && myTodoItems.length > 0 ? (
             <View style={styles.container}>
               <FlatList
