@@ -102,7 +102,6 @@ export default FinishedTasksScreen = () => {
     <>
       <Provider>
         <View style={{backgroundColor: '#5F9EA0', height: '100%'}}>
-          <Button onPress={flipShowTasks}></Button>
           {typeof myTodoItems !== 'undefined' && myTodoItems.length > 0 ? (
             <View style={styles.container}>
               <FlatList

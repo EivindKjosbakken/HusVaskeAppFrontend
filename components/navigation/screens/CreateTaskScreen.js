@@ -234,26 +234,34 @@ export default CreateTaskScreen = () => {
                   />
                 </View>
 
-                <View style={styles.parent}>
-                  <View style={styles.bigChild}>
-                    <Text style={styles.requireProofText}>
-                      Require proof to complete task
-                    </Text>
-                  </View>
-
-                  <View style={styles.smallChild}>
-                    <Switch
-                      value={isShowProof}
-                      onValueChange={toggleIsShowProof}
-                      disabled={false}
-                      activeText={'Yes'}
-                      inActiveText={'No'}
-                      backgroundActive={'green'}
-                      backgroundInactive={'gray'}
-                      circleActiveColor={'#30a566'}
-                      circleInActiveColor={'#000000'}
-                    />
-                  </View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: '5%',
+                  }}>
+                  <Text style={styles.requireProofText}>
+                    Require proof to complete task
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: '2%',
+                    marginBottom: '10%',
+                  }}>
+                  <Switch
+                    value={isShowProof}
+                    onValueChange={toggleIsShowProof}
+                    disabled={false}
+                    activeText={'Yes'}
+                    inActiveText={'No'}
+                    backgroundActive={'green'}
+                    backgroundInactive={'gray'}
+                    circleActiveColor={'#30a566'}
+                    circleInActiveColor={'#000000'}
+                  />
                 </View>
 
                 <View
